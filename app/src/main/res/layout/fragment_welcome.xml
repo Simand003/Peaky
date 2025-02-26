@@ -13,7 +13,6 @@
         android:text="@string/pe"
         android:textStyle="bold"
         android:textSize="40sp"
-        android:textColor="@color/black"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
         android:layout_toStartOf="@id/text_triangle" />
@@ -25,7 +24,6 @@
         android:text="@string/triangle"
         android:textStyle="bold"
         android:textSize="40sp"
-        android:textColor="@color/black"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
         android:padding="0dp"
@@ -38,7 +36,6 @@
         android:text="@string/ky"
         android:textStyle="bold"
         android:textSize="40sp"
-        android:textColor="@color/black"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
         android:layout_toEndOf="@id/text_triangle" />

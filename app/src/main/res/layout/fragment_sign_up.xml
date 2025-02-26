@@ -1,8 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.login.SignUpFragment">
 
-</FrameLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/email"
+        app:startIconDrawable="@drawable/ic_email"
+        app:errorEnabled="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        app:startIconDrawable="@drawable/ic_lock"
+        app:endIconMode="password_toggle"
+        app:errorEnabled="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_below="@+id/textField_email">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField_passwordConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/confirm_password"
+        app:startIconDrawable="@drawable/ic_lock_full"
+        app:endIconMode="password_toggle"
+        app:errorEnabled="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_below="@+id/textField_password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_signUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up_big"
+        android:layout_below="@+id/textField_passwordConfirm"
+        android:layout_marginTop="17dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        />
+
+    <RelativeLayout
+        android:id="@+id/spacer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_signUp"
+        android:layout_marginTop="16dp"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_toStartOf="@id/text_or"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="24dp"
+            android:background="#555"/>
+
+        <TextView
+            android:id="@+id/text_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/or"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/text_or"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="24dp"
+            android:background="#555"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/loginWithGoogleButton"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/continue_with_google"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_gravity="center"
+        android:layout_below="@id/spacer"
+        app:icon="@drawable/ic_google"
+        app:iconGravity="textStart"
+        app:iconTint="@null" />
+
+</RelativeLayout>

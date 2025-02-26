@@ -17,6 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation_menu"/>
-
+        app:menu="@menu/bottom_navigation_menu"
+        style="@style/BottomNavigationStyle"
+        app:itemTextAppearanceActive="@style/BottomNavigationText"
+        app:itemTextAppearanceInactive="@style/BottomNavigationText"/>
 </RelativeLayout>
