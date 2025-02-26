@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "922562414648",
+    "project_id": "peaky-9d3df",
+    "storage_bucket": "peaky-9d3df.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922562414648:android:4c357130d881ce05027ecd",
+        "android_client_info": {
+          "package_name": "com.example.peaky"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB6qNjae4GOND4294FROaHLWORqa_XUWw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
