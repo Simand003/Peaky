@@ -7,13 +7,69 @@
     tools:context=".ui.login.WelcomeFragment">
 
     <TextView
+        android:id="@+id/text_pe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/peaky"
+        android:text="@string/pe"
         android:textStyle="bold"
         android:textSize="40sp"
         android:textColor="@color/black"
         android:layout_marginTop="32dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_toStartOf="@id/text_triangle" />
 
+    <TextView
+        android:id="@+id/text_triangle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/triangle"
+        android:textStyle="bold"
+        android:textSize="40sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"
+        android:padding="0dp"
+        />
+
+    <TextView
+        android:id="@+id/text_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ky"
+        android:textStyle="bold"
+        android:textSize="40sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"
+        android:layout_toEndOf="@id/text_triangle" />
+
+    <LinearLayout 
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_marginBottom="32dp"
+        >
+
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up_for_free"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <Button
+            style="?attr/materialButtonOutlinedStyle"
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+        
+    </LinearLayout>
 </RelativeLayout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/welcome_nav_graph"
+    app:startDestination="@id/fragment_welcome">
+
+    <fragment
+        android:id="@+id/fragment_welcome"
+        android:name="com.example.peaky.ui.login.WelcomeFragment">
+        <action
+            android:id="@+id/action_fragmentWelcome_to_fragmentLogin"
+            app:destination="@id/fragment_login" />
+        <action
+            android:id="@+id/action_fragmentWelcome_to_fragmentSignUp"
+            app:destination="@id/fragment_sign_up" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_login"
+        android:name="com.example.peaky.ui.login.LoginFragment" />
+
+    <fragment
+        android:id="@+id/fragment_sign_up"
+        android:name="com.example.peaky.ui.login.SignUpFragment">
+        <action
+            android:id="@+id/action_fragmentSignUp_to_fragmentUserInfo"
+            app:destination="@id/fragment_user_info" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_user_info"
+        android:name="com.example.peaky.ui.login.UserInfoFragment" />
+
+</navigation>

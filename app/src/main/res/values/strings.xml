@@ -7,4 +7,16 @@
     <string name="home">Home</string>
     <string name="challenges">Challenges</string>
     <string name="peaky">PE▲KY</string>
+    <string name="pe">PE</string>
+    <string name="triangle">▲</string>
+    <string name="ky">KY</string>
+    <string name="sign_up_for_free">Sign up for free</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="or">OR</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+    <string name="google_icon">Google Icon</string>
+    <string name="login_with_google">Login with Google</string>
 </resources>
