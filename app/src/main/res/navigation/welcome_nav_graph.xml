@@ -17,7 +17,11 @@
 
     <fragment
         android:id="@+id/fragment_login"
-        android:name="com.example.peaky.ui.login.LoginFragment" />
+        android:name="com.example.peaky.ui.login.LoginFragment" >
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentUserInfo"
+            app:destination="@id/fragment_user_info" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_sign_up"

@@ -12,7 +12,20 @@
           "package_name": "com.example.peaky"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "922562414648-5r4pvdso4f2e1o60sqh21hpf49ptkpfm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.peaky",
+            "certificate_hash": "3656cb183292811819e89e69250a9c7fe202c327"
+          }
+        },
+        {
+          "client_id": "922562414648-k9v0q1s9uekiloc7e0eniksipeckcetm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBB6qNjae4GOND4294FROaHLWORqa_XUWw"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922562414648-k9v0q1s9uekiloc7e0eniksipeckcetm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -15,7 +15,8 @@
         android:textSize="40sp"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:layout_toStartOf="@id/text_triangle" />
+        android:layout_toStartOf="@id/text_triangle"
+        android:textColor="#000000"/>
 
     <TextView
         android:id="@+id/text_triangle"
@@ -27,6 +28,7 @@
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
         android:padding="0dp"
+        android:textColor="#000000"
         />
 
     <TextView
@@ -38,7 +40,8 @@
         android:textSize="40sp"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:layout_toEndOf="@id/text_triangle" />
+        android:layout_toEndOf="@id/text_triangle"
+        android:textColor="#000000"/>
 
     <LinearLayout 
         android:id="@+id/button_container"

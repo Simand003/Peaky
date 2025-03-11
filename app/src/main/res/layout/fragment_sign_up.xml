@@ -7,7 +7,7 @@
     tools:context=".ui.login.SignUpFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textField_email"
+        android:id="@+id/container_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email"
@@ -18,13 +18,16 @@
         android:layout_marginEnd="32dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textField_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textField_password"
+        android:id="@+id/container_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password"
@@ -34,16 +37,19 @@
         android:layout_marginTop="1dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_below="@+id/textField_email">
+        android:layout_below="@id/container_email">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textField_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:imeOptions="actionNext"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textField_passwordConfirm"
+        android:id="@+id/container_passwordConfirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/confirm_password"
@@ -53,11 +59,14 @@
         android:layout_marginTop="1dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_below="@+id/textField_password">
+        android:layout_below="@id/container_password">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textField_passwordConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:imeOptions="actionDone"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -66,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/sign_up_big"
-        android:layout_below="@+id/textField_passwordConfirm"
+        android:layout_below="@+id/container_passwordConfirm"
         android:layout_marginTop="17dp"
         android:layout_marginStart="64dp"
         android:layout_marginEnd="64dp"
