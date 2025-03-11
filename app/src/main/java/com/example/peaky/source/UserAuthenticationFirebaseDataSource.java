@@ -23,6 +23,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserAuthenticationFirebaseDataSource {
 
     private final FirebaseAuth firebaseAuth;
@@ -41,14 +44,25 @@ public class UserAuthenticationFirebaseDataSource {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-
                         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                         if (firebaseUser != null) {
                             User user = new User(firebaseUser.getUid(), firebaseUser.getEmail(), null, null, null, null);
 
+                            // Creiamo una mappa dei dati da salvare in Firestore
+                            Map<String, Object> userUpdates = new HashMap<>();
+                            userUpdates.put("userId", user.getUid());
+                            userUpdates.put("email", user.getEmail());
+                            userUpdates.put("name", user.getName());
+                            userUpdates.put("surname", user.getSurname());
+                            // Non aggiungere "birth_date" se è null
+                            if (user.getDate_of_birth() != null) {
+                                userUpdates.put("birth_date", user.getDate_of_birth());
+                            }
+                            userUpdates.put("gender", user.getGender());
+
                             firebaseFirestore.collection("users")
                                     .document(firebaseUser.getUid())
-                                    .set(user)
+                                    .set(userUpdates)
                                     .addOnCompleteListener(dbTask -> {
                                         if (dbTask.isSuccessful()) {
                                             resultLiveData.setValue(new Result.Success<>(REGISTER_SUCCESSFUL_MESSAGE));
@@ -107,7 +121,19 @@ public class UserAuthenticationFirebaseDataSource {
                                 if (docTask.isSuccessful()) {
                                     if (!docTask.getResult().exists()) {
                                         // Se l'utente non esiste, lo salviamo
-                                        userRef.set(user)
+                                        // Creiamo una mappa dei dati da salvare in Firestore
+                                        Map<String, Object> userUpdates = new HashMap<>();
+                                        userUpdates.put("userId", user.getUid());
+                                        userUpdates.put("email", user.getEmail());
+                                        userUpdates.put("name", user.getName());
+                                        userUpdates.put("surname", user.getSurname());
+                                        // Non aggiungere "birth_date" se è null
+                                        if (user.getDate_of_birth() != null) {
+                                            userUpdates.put("birth_date", user.getDate_of_birth());
+                                        }
+                                        userUpdates.put("gender", user.getGender());
+
+                                        userRef.set(userUpdates)
                                                 .addOnCompleteListener(saveTask -> {
                                                     if (saveTask.isSuccessful()) {
                                                         callback.onComplete(new Result.Success<>(user));
