@@ -5,17 +5,17 @@ import androidx.lifecycle.LiveData;
 import com.example.peaky.model.Result;
 import com.example.peaky.model.User;
 import com.example.peaky.source.UserAuthenticationFirebaseDataSource;
-import com.example.peaky.source.UserRealtimeDatabaseFirebaseDataSource;
+import com.example.peaky.source.UserFirestoreFirebaseDataSource;
 
 public class UserRepository {
 
     private final UserAuthenticationFirebaseDataSource userAuthFirebaseDataSource;
-    private final UserRealtimeDatabaseFirebaseDataSource userRealTimeDatabaseDataSource;
+    private final UserFirestoreFirebaseDataSource userRealTimeDatabaseDataSource;
 
     public UserRepository(UserAuthenticationFirebaseDataSource userAuthenticationFirebaseDataSource,
-                          UserRealtimeDatabaseFirebaseDataSource userRealtimeDatabaseFirebaseDataSource) {
+                          UserFirestoreFirebaseDataSource userFirestoreFirebaseDataSource) {
         this.userAuthFirebaseDataSource = userAuthenticationFirebaseDataSource;
-        this.userRealTimeDatabaseDataSource = userRealtimeDatabaseFirebaseDataSource;
+        this.userRealTimeDatabaseDataSource = userFirestoreFirebaseDataSource;
     }
 
     public LiveData<Result<String>> register(String email, String password) {

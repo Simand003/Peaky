@@ -1,7 +1,6 @@
 package com.example.peaky.source;
 
 import static com.example.peaky.util.Constants.EXISTING_ACCOUNT_ERROR_MESSAGE;
-import static com.example.peaky.util.Constants.FIREBASE_DATABASE;
 import static com.example.peaky.util.Constants.INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE;
 import static com.example.peaky.util.Constants.LOGIN_SUCCESSFUL_MESSAGE;
 import static com.example.peaky.util.Constants.NO_EXISTING_ACCOUNT_ERROR_MESSAGE;
@@ -9,7 +8,6 @@ import static com.example.peaky.util.Constants.REGISTER_SUCCESSFUL_MESSAGE;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -22,18 +20,19 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserAuthenticationFirebaseDataSource {
 
     private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firebaseFirestore;
+
 
     public UserAuthenticationFirebaseDataSource() {
         this.firebaseAuth = FirebaseAuth.getInstance();
+        this.firebaseFirestore = FirebaseFirestore.getInstance();
+
     }
 
     public LiveData<Result<String>> registerUser(String email, String password) {
@@ -47,10 +46,9 @@ public class UserAuthenticationFirebaseDataSource {
                         if (firebaseUser != null) {
                             User user = new User(firebaseUser.getUid(), firebaseUser.getEmail(), null, null, null, null);
 
-                            // Salva l'utente nel Realtime Database
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance(FIREBASE_DATABASE).getReference("users");
-
-                            databaseReference.child(firebaseUser.getUid()).setValue(user)
+                            firebaseFirestore.collection("users")
+                                    .document(firebaseUser.getUid())
+                                    .set(user)
                                     .addOnCompleteListener(dbTask -> {
                                         if (dbTask.isSuccessful()) {
                                             resultLiveData.setValue(new Result.Success<>(REGISTER_SUCCESSFUL_MESSAGE));
@@ -102,22 +100,27 @@ public class UserAuthenticationFirebaseDataSource {
                         if (firebaseUser != null) {
                             User user = new User(firebaseUser.getUid(), firebaseUser.getEmail(), null, null, null, null);
 
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance(FIREBASE_DATABASE).getReference("users");
+                            DocumentReference userRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
 
-                            // Controlla se l'utente esiste già nel database
-                            databaseReference.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (!snapshot.exists()) {
-                                        // Se l'utente non esiste, lo salviamo nel database
-                                        databaseReference.child(firebaseUser.getUid()).setValue(user);
+                            // Controlla se l'utente esiste già
+                            userRef.get().addOnCompleteListener(docTask -> {
+                                if (docTask.isSuccessful()) {
+                                    if (!docTask.getResult().exists()) {
+                                        // Se l'utente non esiste, lo salviamo
+                                        userRef.set(user)
+                                                .addOnCompleteListener(saveTask -> {
+                                                    if (saveTask.isSuccessful()) {
+                                                        callback.onComplete(new Result.Success<>(user));
+                                                    } else {
+                                                        callback.onComplete(new Result.Error<>(saveTask.getException()));
+                                                    }
+                                                });
+                                    } else {
+                                        // Se l'utente esiste già, lo restituiamo direttamente
+                                        callback.onComplete(new Result.Success<>(user));
                                     }
-                                    callback.onComplete(new Result.Success<>(user));
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    callback.onComplete(new Result.Error<>(error.toException()));
+                                } else {
+                                    callback.onComplete(new Result.Error<>(docTask.getException()));
                                 }
                             });
 

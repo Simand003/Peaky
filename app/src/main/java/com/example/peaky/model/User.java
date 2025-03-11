@@ -7,15 +7,15 @@ public class User {
     private String email;
     private String name;
     private String surname;
-    private Date date_of_birth;
+    private Date birth_date;
     private GenderUser gender;
 
-    public User(String uid, String email, String name, String surname, Date date_of_birth, GenderUser gender) {
+    public User(String uid, String email, String name, String surname, Date birth_date, GenderUser gender) {
         this.uid = uid;
         this.email = email;
         this.name = name;
         this.surname = surname;
-        this.date_of_birth = date_of_birth;
+        this.birth_date = birth_date;
         this.gender = gender;
     }
 
@@ -52,11 +52,11 @@ public class User {
     }
 
     public Date getDate_of_birth() {
-        return date_of_birth;
+        return birth_date;
     }
 
-    public void setDate_of_birth(Date date_of_birth) {
-        this.date_of_birth = date_of_birth;
+    public void setBirth_date(Date birth_date) {
+        this.birth_date = birth_date;
     }
 
     public GenderUser getGender() {

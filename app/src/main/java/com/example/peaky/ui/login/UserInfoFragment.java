@@ -1,7 +1,6 @@
 package com.example.peaky.ui.login;
 
 import static com.example.peaky.util.Constants.BIRTH_DATE_INFO_MESSAGE;
-import static com.example.peaky.util.Constants.FIREBASE_DATABASE;
 import static com.example.peaky.util.Constants.GENDER_INFO_MESSAGE;
 
 import android.app.AlertDialog;
@@ -18,8 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -32,12 +29,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserInfoFragment extends Fragment {
 

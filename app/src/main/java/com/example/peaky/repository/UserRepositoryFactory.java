@@ -1,7 +1,7 @@
 package com.example.peaky.repository;
 
 import com.example.peaky.source.UserAuthenticationFirebaseDataSource;
-import com.example.peaky.source.UserRealtimeDatabaseFirebaseDataSource;
+import com.example.peaky.source.UserFirestoreFirebaseDataSource;
 
 public class UserRepositoryFactory {
 
@@ -10,10 +10,10 @@ public class UserRepositoryFactory {
     public static UserRepository getUserRepository() {
         if (userRepository == null) {
             UserAuthenticationFirebaseDataSource userAuthenticationFirebaseDataSource = new UserAuthenticationFirebaseDataSource();
-            UserRealtimeDatabaseFirebaseDataSource userRealtimeDatabaseFirebaseDataSource = new UserRealtimeDatabaseFirebaseDataSource();
+            UserFirestoreFirebaseDataSource userFirestoreFirebaseDataSource = new UserFirestoreFirebaseDataSource();
 
             userRepository = new UserRepository(userAuthenticationFirebaseDataSource,
-                    userRealtimeDatabaseFirebaseDataSource);
+                    userFirestoreFirebaseDataSource);
         }
         return userRepository;
     }
