@@ -95,7 +95,6 @@ public class UserFirestoreFirebaseDataSource {
         return resultLiveData;
     }
 
-
     public LiveData<Result<Boolean>> isUserRegistrationComplete(String userId) {
         MutableLiveData<Result<Boolean>> resultLiveData = new MutableLiveData<>();
         DocumentReference userRef = firestore.collection("users").document(userId);
