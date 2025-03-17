@@ -1,8 +1,11 @@
 package com.example.peaky.ui.home;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +14,14 @@ import android.widget.ImageView;
 import com.example.peaky.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RecordFragment extends Fragment {
 
     private View bottomSheet, bottomSheetContent;
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private ImageView arrowIcon;
+    private FloatingActionButton recordStartButton, recordEndButton;
 
     public RecordFragment() {
     }
@@ -35,60 +40,64 @@ public class RecordFragment extends Fragment {
         bottomSheetContent = view.findViewById(R.id.bottomSheetContent);
         arrowIcon = view.findViewById(R.id.arrowIcon);
 
+        recordStartButton = view.findViewById(R.id.record_start);
+        recordEndButton = view.findViewById(R.id.record_end);
+
+        recordStartButton.setOnClickListener(v -> {
+            recordStartButton.setVisibility(View.VISIBLE);
+            animateSecondFab();
+        });
+
+        // Bottomsheet behavior
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetBehavior.setPeekHeight(200);
+        bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setDraggable(true);
-
-        bottomSheetContent.setVisibility(View.GONE);
 
         bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                // Gestisci i vari stati del BottomSheet
                 switch (newState) {
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        // Quando il BottomSheet è completamente espanso, mostra il contenuto e cambia l'icona
-                        bottomSheetContent.setVisibility(View.VISIBLE);  // Mostra il contenuto
-                        //arrowIcon.setImageResource(R.drawable.ic_line);  // Linea dritta
-                        break;
-
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        // Quando il BottomSheet è contratto, mostra solo la linea e nascondi il contenuto
-                        bottomSheetContent.setVisibility(View.GONE);  // Nascondi il contenuto
-                        //arrowIcon.setImageResource(R.drawable.ic_line);  // Linea dritta
-                        break;
-
                     case BottomSheetBehavior.STATE_DRAGGING:
                     case BottomSheetBehavior.STATE_SETTLING:
-                        // Quando il BottomSheet è in movimento, mostra il contenuto e la freccia giusta
-                        bottomSheetContent.setVisibility(View.VISIBLE);  // Mostra il contenuto
-                        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                            //arrowIcon.setImageResource(R.drawable.ic_arrow_up);  // Freccia verso l'alto
-                        } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                            //arrowIcon.setImageResource(R.drawable.ic_arrow_down);  // Freccia verso il basso
-                        }
+                        bottomSheetContent.setVisibility(View.VISIBLE);
+                        arrowIcon.setImageResource(R.drawable.bs_ic_line);
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        bottomSheetContent.setVisibility(View.GONE);
+                        arrowIcon.setImageResource(R.drawable.bs_ic_line);
                         break;
                 }
             }
 
+            private float lastSlideOffset = 0;
+
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // Monitora il movimento del BottomSheet per cambiare la freccia in tempo reale
-                if (slideOffset > 0) {
-                    // Movimento verso l'alto
-                    //arrowIcon.setImageResource(R.drawable.ic_arrow_up);  // Freccia verso l'alto
-                } else if (slideOffset < 0) {
-                    // Movimento verso il basso
-                    //arrowIcon.setImageResource(R.drawable.ic_arrow_down);  // Freccia verso il basso
-                } else {
-                    // Quando il BottomSheet è fermo (al massimo o minimo)
-                    //arrowIcon.setImageResource(R.drawable.ic_line);  // Linea dritta
+                if (slideOffset > lastSlideOffset) {
+                    arrowIcon.setImageResource(R.drawable.bs_ic_arrow_up);
+                } else if (slideOffset < lastSlideOffset) {
+                    arrowIcon.setImageResource(R.drawable.bs_ic_arrow_down);
                 }
+
+                lastSlideOffset = slideOffset;
             }
         });
 
         return view;
+    }
+
+    private void animateSecondFab() {
+        // Esegui una semplice animazione per il secondo FAB
+        ObjectAnimator translationY = ObjectAnimator.ofFloat(recordEndButton, "translationY", -150f);
+        translationY.setDuration(300);
+        translationY.start();
+
+        // Puoi anche aggiungere altre animazioni, come fade in o scale
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(recordEndButton, "alpha", 0f, 1f);
+        fadeIn.setDuration(300);
+        fadeIn.start();
     }
 }

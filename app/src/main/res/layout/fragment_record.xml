@@ -33,21 +33,24 @@
 
     <LinearLayout
         android:id="@+id/bottomSheet"
+        style="@style/Widget.Material3.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@android:color/white"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        style="@style/Widget.Material3.BottomSheet.Modal">
+        android:orientation="vertical"
+        app:behavior_draggable="true"
+        app:behavior_hideable="false"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView
             android:id="@+id/arrowIcon"
             android:layout_width="40dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_info"
-            android:layout_gravity="center"
+            android:layout_gravity="center|end"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/bs_ic_line" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/bottomSheetContent"
@@ -65,22 +68,23 @@
                     android:id="@+id/spinnerActivityType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:textAlignment="center"
                     android:layout_gravity="center"
-                    android:padding="4dp" />
+                    android:layout_marginBottom="16dp"
+                    android:padding="4dp"
+                    android:textAlignment="center" />
 
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TableRow>
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="TIME"
-                            android:layout_weight="1"
                             android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:text="TIME"
                             android:textAlignment="center"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -97,58 +101,60 @@
                     </TableRow>
 
                     <TableRow>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="00:00:00"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:textAlignment="center"
-                            android:textSize="24sp"
-                            android:layout_marginBottom="16dp"
-                            android:layout_marginTop="8dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0.00 km"
                             android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:textAlignment="center"
-                            android:textSize="24sp"
+                            android:layout_marginTop="8dp"
                             android:layout_marginBottom="16dp"
-                            android:layout_marginTop="8dp" />
+                            android:layout_weight="1"
+                            android:text="00:00:00"
+                            android:textAlignment="center"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="16dp"
+                            android:layout_weight="1"
+                            android:text="0.00 km"
+                            android:textAlignment="center"
+                            android:textSize="24sp" />
                     </TableRow>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ELEVATION GAIN"
                         android:layout_gravity="center"
+                        android:text="ELEVATION GAIN"
                         android:textAlignment="center"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TableRow>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+ 0 m"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:textAlignment="center"
-                            android:textSize="24sp"
-                            android:layout_marginTop="8dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="- 0 m"
                             android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
                             android:layout_weight="1"
+                            android:text="+ 0 m"
                             android:textAlignment="center"
-                            android:textSize="24sp"
-                            android:layout_marginTop="8dp" />
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="1"
+                            android:text="- 0 m"
+                            android:textAlignment="center"
+                            android:textSize="24sp" />
                     </TableRow>
                 </TableLayout>
 
@@ -156,38 +162,47 @@
                     android:id="@+id/pinLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ADD A POINT OF INTEREST"
                     android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    android:text="ADD A POINT OF INTEREST"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:padding="4dp" >
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="empty (soon...)"
-                        android:textStyle="bold"
-                        android:layout_gravity="center"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <EditText
                     android:id="@+id/editTextDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Notes for reporters"
-                    android:inputType="textMultiLine"
+                    android:layout_marginTop="16dp"
                     android:gravity="start|top"
-                    android:layout_marginTop="16dp"/>
+                    android:hint="Notes for reporters"
+                    android:inputType="textMultiLine" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/record_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/record_start"
+        app:layout_anchor="@id/bottomSheet"
+        app:layout_anchorGravity="top|center_horizontal"
+        android:layout_marginBottom="20dp"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

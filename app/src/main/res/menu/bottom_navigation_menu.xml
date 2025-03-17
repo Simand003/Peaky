@@ -3,27 +3,27 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/bnw_ic_home"
         android:title="@string/home" />
 
     <item
         android:id="@+id/navigation_maps"
-        android:icon="@drawable/ic_maps"
+        android:icon="@drawable/bnw_ic_maps"
         android:title="@string/maps" />
 
     <item
         android:id="@+id/navigation_record"
-        android:icon="@drawable/ic_record"
+        android:icon="@drawable/bnw_ic_record"
         android:title="@string/record" />
 
     <item
         android:id="@+id/navigation_challenges"
-        android:icon="@drawable/ic_challenges"
+        android:icon="@drawable/bnw_ic_challenges"
         android:title="@string/challenges" />
 
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_profile"
+        android:icon="@drawable/bnw_ic_profile"
         android:title="@string/profile" />
 
 </menu>
