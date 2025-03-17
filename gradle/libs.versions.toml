@@ -3,6 +3,7 @@ agp = "8.6.1"
 firebaseBom = "33.9.0"
 firebaseDatabase = "21.0.0"
 googleid = "1.1.1"
+gson = "2.10.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -23,6 +24,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firebase-firestore" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson"}
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

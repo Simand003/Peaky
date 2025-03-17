@@ -1,12 +1,5 @@
 package com.example.peaky.util;
 
-import android.app.Application;
-
-import com.example.peaky.repository.IUserRepository;
-import com.example.peaky.repository.UserRepository;
-import com.example.peaky.source.BaseUserAuthenticationRemoteDataSource;
-import com.example.peaky.source.UserAuthenticationFirebaseDataSource;
-
 public class ServiceLocator {
 
     private static volatile ServiceLocator INSTANCE = null;

@@ -1,81 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@color/md_theme_surfaceContainerLow"
-        >
+        android:background="@color/md_theme_surfaceContainerLow">
+
+        <Button
+            android:id="@+id/button_back"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:layout_centerVertical="true"
+            android:textColor="@color/md_theme_onSurface_mediumContrast"
+            />
 
         <TextView
             android:id="@+id/textAltitudeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ALTITUDE"
-            android:layout_gravity="center"
+            android:text="@string/altitude"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
 
         <TextView
             android:id="@+id/textAltitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/textAltitudeLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:text="@string/_0_m"
+            android:textSize="24sp"
+            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/map_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_container"
+        android:layout_alignParentBottom="true"
+        >
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/buttons_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="end"
+        android:layout_gravity="bottom|end"
+        >
+
+        <ImageButton
+            android:id="@+id/button_record_end"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            android:text="0 m"
-            android:textSize="24sp" />
+            android:src="@drawable/record_end"
+            app:tint="@color/md_theme_primary"
+            android:background="@drawable/shape_round_button_empty"
+            android:contentDescription="@string/end_recording"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            />
+
+        <ImageButton
+            android:id="@+id/button_record_action"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/record_start"
+            app:tint="@color/md_theme_onPrimary"
+            android:background="@drawable/shape_round_button_full"
+            android:contentDescription="@string/end_recording"
+            android:scaleType="centerInside"
+            android:layout_marginTop="8dp"
+            />
+
+        <ImageButton
+            android:id="@+id/button_recorded_data"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/record_stats"
+            app:tint="@color/md_theme_primary"
+            android:background="@drawable/shape_round_button_empty"
+            android:contentDescription="@string/show_recorded_data"
+            android:scaleType="centerInside"
+            android:layout_marginTop="8dp"
+            />
+
+        <ImageButton
+            android:id="@+id/button_reporters_tool"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/record_reporter"
+            app:tint="@color/md_theme_primary"
+            android:background="@drawable/shape_round_button_empty"
+            android:contentDescription="@string/show_reporters_tools"
+            android:scaleType="centerInside"
+            android:layout_marginTop="8dp"
+            />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/bottomSheet"
+        android:id="@+id/bottomSheet_data"
         style="@style/Widget.Material3.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:orientation="vertical"
         app:behavior_draggable="true"
-        app:behavior_hideable="false"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
 
         <ImageView
             android:id="@+id/arrowIcon"
             android:layout_width="40dp"
             android:layout_height="20dp"
-            android:layout_gravity="center|end"
+            android:layout_gravity="center"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginEnd="12dp"
             android:src="@drawable/bs_ic_line" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/bottomSheetContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingBottom="16dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp">
 
-                <Spinner
-                    android:id="@+id/spinnerActivityType"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:text="@string/activity_data"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinner_sports"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:padding="4dp"
                     android:textAlignment="center" />
 
                 <TableLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
 
                     <TableRow>
 
@@ -158,6 +251,50 @@
                     </TableRow>
                 </TableLayout>
 
+            </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomSheet_reporter"
+        style="@style/Widget.Material3.BottomSheet.Modal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        app:behavior_draggable="true"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
+
+        <ImageView
+            android:id="@+id/arrowIcon2"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/bs_ic_line" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/bottomSheetDataContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/reporters_tool"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/pinLabel"
                     android:layout_width="wrap_content"
@@ -165,14 +302,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
                     android:text="ADD A POINT OF INTEREST"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="4dp">
+                    />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -180,7 +310,6 @@
                         android:layout_gravity="center"
                         android:text="empty (soon...)"
                         android:textStyle="bold" />
-                </LinearLayout>
 
                 <EditText
                     android:id="@+id/editTextDescription"
@@ -190,19 +319,8 @@
                     android:gravity="start|top"
                     android:hint="Notes for reporters"
                     android:inputType="textMultiLine" />
-
-            </LinearLayout>
+                </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/record_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/record_start"
-        app:layout_anchor="@id/bottomSheet"
-        app:layout_anchorGravity="top|center_horizontal"
-        android:layout_marginBottom="20dp"
-        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

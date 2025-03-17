@@ -13,7 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.peaky.model.Result;
 import com.example.peaky.model.User;
-import com.example.peaky.repository.UserResponseCallback;
+import com.example.peaky.repository.user.UserResponseCallback;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;

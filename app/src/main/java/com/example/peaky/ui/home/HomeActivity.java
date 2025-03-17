@@ -2,13 +2,16 @@ package com.example.peaky.ui.home;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.peaky.R;
+import com.example.peaky.ui.home.record.RecordFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -59,5 +62,23 @@ public class HomeActivity extends AppCompatActivity {
         transaction.replace(R.id.frameLayout, fragment);
         transaction.addToBackStack(null); // Aggiunge al back stack per la navigazione
         transaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setVisibility(View.VISIBLE);
+
+            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        }
     }
 }

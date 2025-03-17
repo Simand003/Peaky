@@ -1,0 +1,14 @@
+{
+  "mountain_sports": [
+    { "name": "Hiking", "icon": "sport_ic_hiking" },
+    { "name": "Ice climbing", "icon": "sport_ic_ice_climbing" },
+    { "name": "Mountain biking", "icon": "sport_ic_mountain_biking" },
+    { "name": "Mountaineering", "icon": "sport_ic_mountaineering" },
+    { "name": "Ski mountaineering", "icon": "sport_ic_ski_mountaineering" },
+    { "name": "Snowshoeing", "icon": "sport_ic_snowshoeing" },
+    { "name": "Sport climbing", "icon": "sport_ic_sport_climbing" },
+    { "name": "Trail running", "icon": "sport_ic_trail_running" },
+    { "name": "Traditional climbing", "icon": "bnw_ic_profile" },
+    { "name": "Via ferrata", "icon": "sport_ic_via_ferrata" }
+  ]
+}

@@ -1,6 +1,4 @@
-package com.example.peaky.repository;
-
-import com.example.peaky.model.User;
+package com.example.peaky.repository.user;
 
 public interface UserResponseCallback<T> {
     void onComplete(T result);

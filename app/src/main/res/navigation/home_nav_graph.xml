@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/recordFragment"
-        android:name="com.example.peaky.ui.home.RecordFragment"
+        android:name="com.example.peaky.ui.home.record.RecordFragment"
         android:label="Record"
         tools:layout="@layout/fragment_record" />
 

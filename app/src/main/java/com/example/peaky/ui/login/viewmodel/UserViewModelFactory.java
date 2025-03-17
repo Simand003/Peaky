@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.peaky.repository.UserRepositoryFactory;
+import com.example.peaky.repository.user.UserRepositoryFactory;
 
 public class UserViewModelFactory implements ViewModelProvider.Factory {
 

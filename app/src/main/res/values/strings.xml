@@ -37,5 +37,15 @@
     <string name="female">Female</string>
     <string name="male">Male</string>
     <string name="fields_marked_with_are_mandatory">Fields marked with * are mandatory</string>
+    <string name="start_pause_and_resume_recording">Start, pause and resume recording</string>
+    <string name="end_recording">End recording</string>
+    <string name="show_recorded_data">Show recorded data</string>
+    <string name="show_reporters_tools">Show reporters\' tools</string>
+    <string name="altitude">ALTITUDE</string>
+    <string name="_0_m">0 m</string>
+    <string name="back">Back</string>
+    <string name="reporters_tool">Reporters\' tool</string>
+    <string name="activity_data">Activity data</string>
+    <string name="sport">Sport</string>
 
 </resources>

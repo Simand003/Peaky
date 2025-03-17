@@ -1,4 +1,4 @@
-package com.example.peaky.repository;
+package com.example.peaky.repository.user;
 
 import androidx.lifecycle.MutableLiveData;
 

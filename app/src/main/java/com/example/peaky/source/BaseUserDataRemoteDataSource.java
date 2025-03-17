@@ -1,7 +1,7 @@
 package com.example.peaky.source;
 
 import com.example.peaky.model.User;
-import com.example.peaky.repository.UserResponseCallback;
+import com.example.peaky.repository.user.UserResponseCallback;
 
 public abstract class BaseUserDataRemoteDataSource {
     protected UserResponseCallback userResponseCallback;

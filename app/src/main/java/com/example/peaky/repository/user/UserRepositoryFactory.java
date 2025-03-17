@@ -1,4 +1,4 @@
-package com.example.peaky.repository;
+package com.example.peaky.repository.user;
 
 import com.example.peaky.source.UserAuthenticationFirebaseDataSource;
 import com.example.peaky.source.UserFirestoreFirebaseDataSource;
