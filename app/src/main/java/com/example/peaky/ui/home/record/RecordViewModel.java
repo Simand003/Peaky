@@ -1,7 +1,5 @@
 package com.example.peaky.ui.home.record;
 
-import android.content.Context;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,21 +10,21 @@ import com.example.peaky.repository.SportRepository;
 import java.util.List;
 
 public class RecordViewModel extends ViewModel {
-    private MutableLiveData<List<Sport>> sportsListLiveData;
-    private SportRepository sportRepository;
+    private final MutableLiveData<List<Sport>> sportsLiveData = new MutableLiveData<>();
+    private final SportRepository sportRepository;
 
     public RecordViewModel(SportRepository repository) {
-        sportsListLiveData = new MutableLiveData<>();
-        sportRepository = repository;
+        this.sportRepository = repository;
+        loadSports();
     }
 
-    public LiveData<List<Sport>> getSportsList() {
-        return sportsListLiveData;
+    private void loadSports() {
+        List<Sport> sports = sportRepository.getSports();
+        sportsLiveData.setValue(sports);
     }
 
-    public void loadSports(Context context) {
-        List<Sport> sportsList = sportRepository.getSports(context);
-        sportsListLiveData.setValue(sportsList);
+    public LiveData<List<Sport>> getSports() {
+        return sportsLiveData;
     }
 }
 

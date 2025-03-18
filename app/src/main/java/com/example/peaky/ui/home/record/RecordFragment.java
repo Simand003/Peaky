@@ -4,17 +4,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.peaky.R;
 import com.example.peaky.adapter.SportAdapter;
@@ -30,8 +28,6 @@ public class RecordFragment extends Fragment {
     private BottomNavigationView bottomNavigationView;
 
     private Spinner spinner;
-    private RecordViewModel recordViewModel;
-    private List<Sport> sportsList;
 
     private Button buttonBack;
     private ImageButton buttonRecordAction, buttonRecordEnd, buttonRecordedData, buttonReporterTools;
@@ -41,6 +37,7 @@ public class RecordFragment extends Fragment {
     private boolean isRecording = false;
 
     private SportRepository sportRepository;
+    private RecordViewModel recordViewModel;
 
     public RecordFragment() {
     }
@@ -81,17 +78,15 @@ public class RecordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        sportRepository = new SportRepository();
+        sportRepository = new SportRepository(requireContext());
         RecordViewModelFactory factory = new RecordViewModelFactory(sportRepository);
         recordViewModel = new ViewModelProvider(this, factory).get(RecordViewModel.class);
 
-        recordViewModel.getSportsList().observe(getViewLifecycleOwner(), sports -> {
-            if (sports != null && !sports.isEmpty()) {
-                sportsList = sports;
-                Log.d("RecordFragment", "Sports loaded: " + sports.size());  // Verifica che i dati siano caricati
-                setupSpinner(sportsList);
-            } else {
-                Log.d("RecordFragment", "No sports data available");
+        recordViewModel.getSports().observe(getViewLifecycleOwner(), new Observer<List<Sport>>() {
+            @Override
+            public void onChanged(List<Sport> sports) {
+                SportAdapter adapter = new SportAdapter(requireContext(), sports);
+                spinner.setAdapter(adapter);
             }
         });
 
@@ -121,26 +116,6 @@ public class RecordFragment extends Fragment {
 
         buttonReporterTools.setOnClickListener(v -> {
             bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        });
-    }
-
-    private void setupSpinner(List<Sport> sports) {
-        // Create the custom adapter for the Spinner
-        SportAdapter adapter = new SportAdapter(getContext(), sports);
-        spinner.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Sport selectedSport = sportsList.get(position);
-                Toast.makeText(getContext(), "Selected: " + selectedSport.getName(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // No action needed
-            }
         });
     }
 }

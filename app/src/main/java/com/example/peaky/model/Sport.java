@@ -2,9 +2,9 @@ package com.example.peaky.model;
 
 public class Sport {
     private String name;
-    private String icon;
+    private int icon;
 
-    public Sport(String name, String icon) {
+    public Sport(String name, int icon) {
         this.name = name;
         this.icon = icon;
     }
@@ -17,11 +17,11 @@ public class Sport {
         this.name = name;
     }
 
-    public String getIcon() {
+    public int getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIcon(int icon) {
         this.icon = icon;
     }
 }

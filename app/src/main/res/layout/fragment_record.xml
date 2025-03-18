@@ -153,6 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/activity_data"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -293,6 +294,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/reporters_tool"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
