@@ -1,4 +1,4 @@
-package com.example.peaky.source;
+package com.example.peaky.source.user;
 
 import com.example.peaky.model.User;
 import com.example.peaky.repository.user.UserResponseCallback;

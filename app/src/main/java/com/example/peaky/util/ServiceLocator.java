@@ -20,13 +20,5 @@ public class ServiceLocator {
         }
         return INSTANCE;
     }
-/*
-    public IUserRepository getUserRepository(Application application) {
-        BaseUserAuthenticationRemoteDataSource userRemoteAuthenticationDataSource =
-                new UserAuthenticationFirebaseDataSource();
 
-        return new UserRepository(userRemoteAuthenticationDataSource);
-    }
-
- */
 }

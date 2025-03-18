@@ -9,7 +9,9 @@
         android:id="@+id/header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_theme_surfaceContainerLow">
+        android:background="@color/md_theme_surfaceContainerLow"
+        android:elevation="10dp"
+        >
 
         <Button
             android:id="@+id/button_back"
@@ -45,14 +47,11 @@
             android:textColor="@color/md_theme_onSurface_mediumContrast"/>
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/map_container"
+    <org.osmdroid.views.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_container"
-        android:layout_alignParentBottom="true"
-        >
-    </FrameLayout>
+        />
 
     <LinearLayout
         android:id="@+id/buttons_container"
@@ -86,7 +85,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/record_start"
-            app:tint="@color/md_theme_onPrimary"
+            app:tint="@color/md_theme_surfaceContainerLow"
             android:background="@drawable/shape_round_button_full"
             android:contentDescription="@string/end_recording"
             android:scaleType="centerInside"
@@ -154,7 +153,8 @@
                     android:layout_gravity="center"
                     android:text="@string/activity_data"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast"/>
 
                 <Spinner
                     android:id="@+id/spinner_sports"
@@ -178,20 +178,22 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:text="TIME"
+                            android:text="@string/time"
                             android:textAlignment="center"
                             android:textSize="12sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:text="DISTANCE"
+                            android:text="@string/distance"
                             android:textAlignment="center"
                             android:textSize="12sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
                     </TableRow>
 
                     <TableRow>
@@ -203,7 +205,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="16dp"
                             android:layout_weight="1"
-                            android:text="00:00:00"
+                            android:text="@string/_00_00_00"
                             android:textAlignment="center"
                             android:textSize="24sp" />
 
@@ -214,7 +216,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="16dp"
                             android:layout_weight="1"
-                            android:text="0.00 km"
+                            android:text="@string/_0_00_km"
                             android:textAlignment="center"
                             android:textSize="24sp" />
                     </TableRow>
@@ -223,10 +225,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="ELEVATION GAIN"
+                        android:text="@string/elevation_gain"
                         android:textAlignment="center"
                         android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:textColor="@color/md_theme_onSurface_mediumContrast"/>
 
                     <TableRow>
 
@@ -236,7 +239,7 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="8dp"
                             android:layout_weight="1"
-                            android:text="+ 0 m"
+                            android:text="@string/positive_0_m"
                             android:textAlignment="center"
                             android:textSize="24sp" />
 
@@ -246,7 +249,7 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="8dp"
                             android:layout_weight="1"
-                            android:text="- 0 m"
+                            android:text="@string/negative_0_m"
                             android:textAlignment="center"
                             android:textSize="24sp" />
                     </TableRow>
@@ -295,7 +298,8 @@
                     android:layout_gravity="center"
                     android:text="@string/reporters_tool"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast"/>
 
                 <TextView
                     android:id="@+id/pinLabel"
@@ -303,7 +307,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
-                    android:text="ADD A POINT OF INTEREST"
+                    android:text="@string/add_a_point_of_interest"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast"
                     />
 
                     <TextView
@@ -319,7 +324,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:gravity="start|top"
-                    android:hint="Notes for reporters"
+                    android:hint="@string/notes_for_reporters"
                     android:inputType="textMultiLine" />
                 </LinearLayout>
         </androidx.core.widget.NestedScrollView>

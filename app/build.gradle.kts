@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.auth)
+    implementation(libs.play.services.location)
     implementation(libs.googleid)
     implementation(libs.gson)
+    implementation(libs.osmdroid)
 }

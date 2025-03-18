@@ -1,4 +1,4 @@
-package com.example.peaky.source;
+package com.example.peaky.source.user;
 
 import static com.example.peaky.util.Constants.EXISTING_ACCOUNT_ERROR_MESSAGE;
 import static com.example.peaky.util.Constants.INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE;

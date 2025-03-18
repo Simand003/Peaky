@@ -1,7 +1,7 @@
 package com.example.peaky.repository.user;
 
-import com.example.peaky.source.UserAuthenticationFirebaseDataSource;
-import com.example.peaky.source.UserFirestoreFirebaseDataSource;
+import com.example.peaky.source.user.UserAuthenticationFirebaseDataSource;
+import com.example.peaky.source.user.UserFirestoreFirebaseDataSource;
 
 public class UserRepositoryFactory {
 

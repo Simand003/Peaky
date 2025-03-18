@@ -47,5 +47,14 @@
     <string name="reporters_tool">Reporters\' tool</string>
     <string name="activity_data">Activity data</string>
     <string name="sport">Sport</string>
+    <string name="add_a_point_of_interest">ADD A POINT OF INTEREST</string>
+    <string name="notes_for_reporters">Notes for reporters</string>
+    <string name="time">TIME</string>
+    <string name="distance">DISTANCE</string>
+    <string name="_00_00_00">00:00:00</string>
+    <string name="_0_00_km">0.00 km</string>
+    <string name="elevation_gain">ELEVATION GAIN</string>
+    <string name="positive_0_m">+ 0 m</string>
+    <string name="negative_0_m">- 0 m</string>
 
 </resources>

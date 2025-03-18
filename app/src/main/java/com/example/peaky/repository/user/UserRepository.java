@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 
 import com.example.peaky.model.Result;
 import com.example.peaky.model.User;
-import com.example.peaky.source.UserAuthenticationFirebaseDataSource;
-import com.example.peaky.source.UserFirestoreFirebaseDataSource;
+import com.example.peaky.source.user.UserAuthenticationFirebaseDataSource;
+import com.example.peaky.source.user.UserFirestoreFirebaseDataSource;
 
 public class UserRepository {
 
