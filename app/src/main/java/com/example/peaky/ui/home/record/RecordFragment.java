@@ -1,25 +1,39 @@
 package com.example.peaky.ui.home.record;
 
+import static com.example.peaky.util.Constants.CANCEL;
+import static com.example.peaky.util.Constants.GO_TO_SETTINGS;
+import static com.example.peaky.util.Constants.LOCATION_NECESSARY_FOR_RECORDING;
+import static com.example.peaky.util.Constants.LOCATION_PERMISSION_PERMANENTLY_DENIED;
+import static com.example.peaky.util.Constants.LOCATION_PERMISSION_REQUEST_CODE;
+import static com.example.peaky.util.Constants.LOCATION_PERMISSION_REQUIRED;
+import static com.example.peaky.util.Constants.OK;
+
 import android.Manifest;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.peaky.R;
 import com.example.peaky.adapter.SportAdapter;
@@ -28,11 +42,15 @@ import com.example.peaky.repository.OSMRepository;
 import com.example.peaky.repository.SportRepository;
 import com.example.peaky.source.osm.OSMDataSource;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -42,24 +60,35 @@ import java.util.List;
 
 public class RecordFragment extends Fragment {
 
+    public static final String FOUND = "Found";
+    public static final String SEARCHING = "Searching";
+    public static final String NOT_FOUND = "Not found";
     private BottomNavigationView bottomNavigationView;
 
     private Spinner spinner;
 
+    private LinearLayout linearLayoutGPSLocator;
+    private TextView textGPSLocator;
+    private static final long SEARCH_TIMEOUT = 10000;
+    private long lastLocationUpdate = 0;
+    private FusedLocationProviderClient locationClient;
+    private Handler handler;
+    private boolean isSearching = false;
+
     private Button buttonBack;
-    private ImageButton buttonRecordAction, buttonRecordEnd, buttonRecordedData, buttonReporterTools;
+    private ImageButton buttonGoToPosition, buttonRecordAction, buttonRecordEnd, buttonRecordedData, buttonReporterTools;
     private View bottomSheetData, bottomSheetReporter;
     private BottomSheetBehavior<View> bottomSheetDataBehavior, bottomSheetReporterBehavior;
 
     private MapView mapView;
+    private Marker userMarker;
 
     private boolean isRecording = false;
+    private boolean returningFromSettings = false;
 
     private SportRepository sportRepository;
     private RecordViewModel recordViewModel;
     private OSMRepository osmRepository;
-
-    private FusedLocationProviderClient fusedLocationClient;
 
     public RecordFragment() {
     }
@@ -74,8 +103,6 @@ public class RecordFragment extends Fragment {
         osmRepository = new OSMRepository(new OSMDataSource());
         RecordViewModelFactory factory = new RecordViewModelFactory(sportRepository, osmRepository);
         recordViewModel = new ViewModelProvider(this, factory).get(RecordViewModel.class);
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
     }
 
     @Override
@@ -90,10 +117,17 @@ public class RecordFragment extends Fragment {
 
         //Initializing the buttons
         buttonBack = view.findViewById(R.id.button_back);
+        buttonGoToPosition = view.findViewById(R.id.button_go_to_position);
         buttonRecordAction = view.findViewById(R.id.button_record_action);
         buttonRecordEnd = view.findViewById(R.id.button_record_end);
         buttonRecordedData = view.findViewById(R.id.button_recorded_data);
         buttonReporterTools = view.findViewById(R.id.button_reporters_tool);
+
+        //Initializing the linear layout for the GPS locator
+        linearLayoutGPSLocator = view.findViewById(R.id.linearLayoutGPSLocator);
+        textGPSLocator = view.findViewById(R.id.textGPSLocator);
+        handler = new Handler();
+        locationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         //Initializing the bottom sheets
         bottomSheetData = view.findViewById(R.id.bottomSheet_data);
@@ -108,7 +142,8 @@ public class RecordFragment extends Fragment {
         spinner = view.findViewById(R.id.spinner_sports);
 
         mapView = view.findViewById(R.id.mapView);
-        setupMap();
+
+        checkLocationPermission();
 
         return view;
     }
@@ -116,8 +151,6 @@ public class RecordFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        //recordViewModel.getMapLocation().observe(getViewLifecycleOwner(), this::updateMap);
 
         recordViewModel.getSports().observe(getViewLifecycleOwner(), new Observer<List<Sport>>() {
             @Override
@@ -134,6 +167,8 @@ public class RecordFragment extends Fragment {
                 bottomNavigationView.setSelectedItemId(R.id.navigation_home);
             }
         });
+
+        buttonGoToPosition.setOnClickListener(v -> centerOnUserLocation());
 
         buttonRecordAction.setOnClickListener(v -> {
             if (!isRecording) {
@@ -157,69 +192,202 @@ public class RecordFragment extends Fragment {
 
     }
 
-    private void setupMap() {
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            initializeMap();
+            startLocationUpdates();
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void initializeMap() {
         mapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK);
         mapView.setMultiTouchControls(true);
-
         mapView.setBuiltInZoomControls(false);
 
-        LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        IMapController mapController = mapView.getController();
+        mapController.setZoom(17);
+        mapController.setCenter(new GeoPoint(45.8566, 9.3972));
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Se non hai i permessi, chiedi l'autorizzazione (in questo caso non stiamo gestendo il caso dei permessi)
-            return;
-        }
+        userMarker = new Marker(mapView);
+        userMarker.setIcon(getResources().getDrawable(R.drawable.position_marker));
+        mapView.getOverlays().add(userMarker);
+    }
 
-        // Ottieni la posizione corrente
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (lastKnownLocation != null) {
-            // Se la posizione è disponibile, centrare la mappa sulla posizione dell'utente
-            GeoPoint userLocation = new GeoPoint(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            mapView.getController().setZoom(18.0);
-            mapView.getController().setCenter(userLocation);
-
-            // Aggiungi un marker per la posizione dell'utente
-            Marker marker = new Marker(mapView);
-            marker.setPosition(userLocation);
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle("Posizione Utente");
-            mapView.getOverlays().add(marker);
-
-            mapView.invalidate();
-        } else {
-            // Se la posizione non è disponibile, puoi gestirla (ad esempio, mostra un messaggio all'utente)
-            Toast.makeText(requireContext(), "Impossibile ottenere la posizione", Toast.LENGTH_SHORT).show();
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initializeMap();
+                startLocationUpdates();
+            } else {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    showPermanentDenialDialog();
+                } else {
+                    showPermissionDeniedDialog();
+                }
+            }
         }
     }
 
-    /*
-    private void updateMap(GeoPoint location) {
-        if (location != null) {
-            mapView.getController().setCenter(location);
-
-            Marker marker = new Marker(mapView);
-            marker.setPosition(location);
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle("Posizione OSM");
-            mapView.getOverlays().add(marker);
-
-            mapView.invalidate();
-        }
+    private void showPermissionDeniedDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(LOCATION_PERMISSION_REQUIRED)
+                .setMessage(LOCATION_NECESSARY_FOR_RECORDING)
+                .setPositiveButton(OK, (dialog, which) -> checkLocationPermission())
+                .setNegativeButton(CANCEL, (dialog, which) -> closeFragment())
+                .setCancelable(false)
+                .show();
     }
 
-     */
+    private void showPermanentDenialDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(LOCATION_PERMISSION_REQUIRED)
+                .setMessage(LOCATION_PERMISSION_PERMANENTLY_DENIED)
+                .setPositiveButton(GO_TO_SETTINGS, (dialog, which) -> {
+                    returningFromSettings = true;
+                    openAppSettings();
+                })
+                .setNegativeButton(CANCEL, (dialog, which) -> closeFragment())
+                .setCancelable(false)
+                .show();
+    }
+
+    private void openAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", requireActivity().getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    private void closeFragment() {
+        if (isAdded()) {
+            if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                getParentFragmentManager().popBackStack();
+                bottomNavigationView.setVisibility(View.VISIBLE);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+            } else {
+                requireActivity().finish();
+            }
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        mapView.onResume();
+
+        if (returningFromSettings) {
+            returningFromSettings = false;
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                initializeMap();
+                startLocationUpdates();
+            } else {
+                showPermanentDenialDialog();
+            }
+        }
+
+        if (mapView != null) {
+            mapView.onResume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mapView.onPause();
+        if (mapView != null) {
+            mapView.onPause();
+        }
     }
+
+    private void startLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        LocationRequest locationRequest = LocationRequest.create()
+                .setInterval(5000) // Cerca ogni 5 secondi
+                .setFastestInterval(2000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        cambiaStato(0);
+        isSearching = true;
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                long currentTime = System.currentTimeMillis();
+
+                if (currentTime - lastLocationUpdate > SEARCH_TIMEOUT) {
+                    cambiaStato(2);
+                    isSearching = false;
+                }
+
+                handler.postDelayed(this, 5000);
+            }
+        }, 5000);
+
+
+        locationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+    }
+
+    private final LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            if (locationResult == null || locationResult.getLocations().isEmpty()) {
+                return;
+            }
+
+            Location location = locationResult.getLastLocation();
+            if (location != null) {
+                isSearching = false;
+                cambiaStato(1);
+                lastLocationUpdate = System.currentTimeMillis();
+            }
+
+            GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+            userMarker.setPosition(userLocation);
+
+            IMapController mapController = mapView.getController();
+            mapController.setCenter(userLocation);
+        }
+    };
+
+    private void cambiaStato(int stato) {
+        linearLayoutGPSLocator.getBackground().setTint(ContextCompat.getColor(requireContext(), recordViewModel.getBackgroundColor(stato)));
+        textGPSLocator.setText(recordViewModel.getTextForState(stato));
+    }
+
+    private void centerOnUserLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            locationClient.getLastLocation()
+                    .addOnSuccessListener(requireActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+
+                                IMapController mapController = mapView.getController();
+                                mapController.animateTo(userLocation);
+                            }
+                        }
+                    });
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
 }
+
+//AGGIUNGERE ANIMAZIONE MARKER POSIZIONE
+//OCCHIO A BUG DI TORNARE PIU' VOLTE INDIETRO DA RECORD FRAGMENT

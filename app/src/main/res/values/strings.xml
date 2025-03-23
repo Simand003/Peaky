@@ -56,5 +56,7 @@
     <string name="elevation_gain">ELEVATION GAIN</string>
     <string name="positive_0_m">+ 0 m</string>
     <string name="negative_0_m">- 0 m</string>
+    <string name="go_to_users_position">Go to users position</string>
+    <string name="searching">Searching…</string>
 
 </resources>

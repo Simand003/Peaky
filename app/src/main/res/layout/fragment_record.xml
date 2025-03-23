@@ -45,6 +45,38 @@
             android:text="@string/_0_m"
             android:textSize="24sp"
             android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutGPSLocator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:padding="5dp"
+            android:background="@drawable/background_gps_locator"
+            >
+
+            <TextView
+                android:id="@+id/textGPSLocator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/searching"
+                android:textColor="@color/md_theme_onPrimary"
+                />
+
+            <ImageView
+                android:id="@+id/iconGPSLocator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/record_gps"
+                app:tint="@color/md_theme_onPrimary"
+                />
+            
+        </LinearLayout>
+
+
     </RelativeLayout>
 
     <org.osmdroid.views.MapView
@@ -67,6 +99,18 @@
         >
 
         <ImageButton
+            android:id="@+id/button_go_to_position"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/record_position"
+            app:tint="@color/md_theme_primary"
+            android:background="@drawable/shape_round_button_empty"
+            android:contentDescription="@string/go_to_users_position"
+            android:scaleType="centerInside"
+            />
+
+        <ImageButton
             android:id="@+id/button_record_end"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -76,6 +120,7 @@
             android:background="@drawable/shape_round_button_empty"
             android:contentDescription="@string/end_recording"
             android:scaleType="centerInside"
+            android:layout_marginTop="8dp"
             android:visibility="gone"
             />
 
@@ -268,6 +313,7 @@
         app:behavior_draggable="true"
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+
         >
 
         <ImageView

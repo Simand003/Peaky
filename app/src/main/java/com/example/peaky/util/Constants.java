@@ -20,4 +20,14 @@ public class Constants {
     public static final String NO_EXISTING_ACCOUNT_ERROR_MESSAGE = "No existing account with this email";
     public static final String INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE = "Invalid email or password.";
     public static final String EXISTING_ACCOUNT_ERROR_MESSAGE = "An account already exists with this email address.";
+
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    public static final String LOCATION_PERMISSION_REQUIRED = "Location Permission Required";
+    public static final String LOCATION_NECESSARY_FOR_RECORDING = "This feature requires access to your location. Without it, the map cannot function properly.";
+    public static final String LOCATION_PERMISSION_PERMANENTLY_DENIED = "You have permanently denied location permission. Please enable it in Settings to continue.";
+    public static final String OK = "Ok";
+    public static final String CANCEL = "Cancel";
+    public static final String GO_TO_SETTINGS = "Go to Settings";
+
+
 }

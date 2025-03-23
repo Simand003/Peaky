@@ -10,8 +10,6 @@ public class OSMRepository {
         this.osmDataSource = osmDataSource;
     }
 
-    // Metodo per ottenere i dati dalla fonte (OSMDataSource)
-    public void getMapData(OSMDataSource.OnMapDataFetchedListener listener) {
-        osmDataSource.fetchDataFromOSM(listener);
-    }
+
 }
+
