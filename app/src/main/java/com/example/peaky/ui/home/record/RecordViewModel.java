@@ -32,7 +32,7 @@ public class RecordViewModel extends ViewModel {
     }
 
     public LiveData<List<Sport>> getSports() {
-        return new MutableLiveData<>(); // ritorna la lista di sport
+        return new MutableLiveData<>();
     }
 
     public int getBackgroundColor(int stato) {

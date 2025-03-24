@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -59,6 +58,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
 import java.util.List;
+import java.util.Locale;
 
 public class RecordFragment extends Fragment {
 
@@ -70,7 +70,7 @@ public class RecordFragment extends Fragment {
     private Spinner spinner;
 
     private LinearLayout linearLayoutGPSLocator;
-    private TextView textGPSLocator;
+    private TextView textGPSLocator, textAltitude;
     private static final long SEARCH_TIMEOUT = 10000;
     private long lastLocationUpdate = 0;
     private FusedLocationProviderClient locationClient;
@@ -116,6 +116,9 @@ public class RecordFragment extends Fragment {
         if (bottomNavigationView != null) {
             bottomNavigationView.setVisibility(View.GONE);
         }
+
+        //Initializing the text view
+        textAltitude = view.findViewById(R.id.textAltitude);
 
         //Initializing the buttons
         buttonBack = view.findViewById(R.id.button_back);
@@ -341,7 +344,6 @@ public class RecordFragment extends Fragment {
         handler.removeCallbacksAndMessages(null);
     }
 
-
     private void startLocationUpdates() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -386,11 +388,15 @@ public class RecordFragment extends Fragment {
                 isSearching = false;
                 cambiaStato(1);
                 lastLocationUpdate = System.currentTimeMillis();
+
+                double altitude = location.getAltitude();
+                textAltitude.setText(String.format(Locale.getDefault(), "%.2f m", altitude));
             }
 
             GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
             if (userMarker != null) {
                 userMarker.setPosition(userLocation);
+
             }
 
             IMapController mapController = mapView.getController();
