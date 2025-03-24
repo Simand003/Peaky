@@ -15,6 +15,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -161,7 +163,11 @@ public class RecordFragment extends Fragment {
         });
 
         buttonBack.setOnClickListener(v -> {
-            getActivity().onBackPressed();
+            if (!isRecording) {
+                closeFragment();
+            } else {
+                requireActivity().onBackPressed();
+            }
             if (bottomNavigationView != null) {
                 bottomNavigationView.setVisibility(View.VISIBLE);
                 bottomNavigationView.setSelectedItemId(R.id.navigation_home);
@@ -268,12 +274,19 @@ public class RecordFragment extends Fragment {
 
     private void closeFragment() {
         if (isAdded()) {
-            if (getParentFragmentManager().getBackStackEntryCount() > 0) {
-                getParentFragmentManager().popBackStack();
+            handler.removeCallbacksAndMessages(null);
+            locationClient.removeLocationUpdates(locationCallback);
+
+            if (mapView != null) {
+                mapView.onPause();
+                mapView.onDetach();
+            }
+
+            getParentFragmentManager().beginTransaction().remove(this).commit();
+
+            if (bottomNavigationView != null) {
                 bottomNavigationView.setVisibility(View.VISIBLE);
                 bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-            } else {
-                requireActivity().finish();
             }
         }
     }
@@ -296,6 +309,15 @@ public class RecordFragment extends Fragment {
         if (mapView != null) {
             mapView.onResume();
         }
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!isRecording) {
+                    closeFragment();
+                }
+            }
+        });
     }
 
     @Override
@@ -305,6 +327,20 @@ public class RecordFragment extends Fragment {
             mapView.onPause();
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (mapView != null) {
+            mapView.onPause();
+            mapView.onDetach();
+        }
+
+        locationClient.removeLocationUpdates(locationCallback);
+        handler.removeCallbacksAndMessages(null);
+    }
+
 
     private void startLocationUpdates() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -353,7 +389,9 @@ public class RecordFragment extends Fragment {
             }
 
             GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
-            userMarker.setPosition(userLocation);
+            if (userMarker != null) {
+                userMarker.setPosition(userLocation);
+            }
 
             IMapController mapController = mapView.getController();
             mapController.setCenter(userLocation);
@@ -386,8 +424,6 @@ public class RecordFragment extends Fragment {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
-
 }
 
 //AGGIUNGERE ANIMAZIONE MARKER POSIZIONE
-//OCCHIO A BUG DI TORNARE PIU' VOLTE INDIETRO DA RECORD FRAGMENT
