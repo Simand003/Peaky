@@ -103,7 +103,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:src="@drawable/record_position"
+            android:src="@drawable/record_position_empty"
             app:tint="@color/md_theme_primary"
             android:background="@drawable/shape_round_button_empty"
             android:contentDescription="@string/go_to_users_position"

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,45 +6,52 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/header_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md_theme_surfaceContainerLow"
-        android:elevation="10dp"
+        android:layout_height="match_parent"
         >
 
-        <Button
-            android:id="@+id/button_back"
-            style="@style/Widget.Material3.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/header_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/back"
-            android:layout_centerVertical="true"
-            android:textColor="@color/md_theme_onSurface_mediumContrast"
-            />
+            android:background="@color/md_theme_surfaceContainerLow">
 
-        <TextView
-            android:id="@+id/textAltitudeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save_activity"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+            <Button
+                android:id="@+id/button_back"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:layout_centerVertical="true"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                />
 
-        <Button
-            android:id="@+id/button_save"
-            style="@style/Widget.Material3.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/md_theme_onSurface_mediumContrast"
-            />
+            <TextView
+                android:id="@+id/textAltitudeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_activity"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+
+            <Button
+                android:id="@+id/button_save"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                />
+
+        </RelativeLayout>
+
+
 
     </RelativeLayout>
 

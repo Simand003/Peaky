@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
@@ -38,26 +38,27 @@ import android.widget.TextView;
 
 import com.example.peaky.R;
 import com.example.peaky.adapter.SportAdapter;
-import com.example.peaky.model.Sport;
 import com.example.peaky.repository.OSMRepository;
 import com.example.peaky.repository.SportRepository;
 import com.example.peaky.source.osm.OSMDataSource;
+import com.example.peaky.ui.home.saveactivity.SaveActivityFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
-import java.util.List;
 import java.util.Locale;
 
 public class RecordFragment extends Fragment {
@@ -87,6 +88,10 @@ public class RecordFragment extends Fragment {
 
     private boolean isRecording = false;
     private boolean returningFromSettings = false;
+
+    private boolean isFirstLocationUpdate = true;
+    private boolean isCentralizing = false;
+
 
     private SportRepository sportRepository;
     private RecordViewModel recordViewModel;
@@ -157,11 +162,25 @@ public class RecordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recordViewModel.getSports().observe(getViewLifecycleOwner(), new Observer<List<Sport>>() {
-            @Override
-            public void onChanged(List<Sport> sports) {
+        recordViewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
+            if (sports != null && !sports.isEmpty()) {
                 SportAdapter adapter = new SportAdapter(requireContext(), sports);
                 spinner.setAdapter(adapter);
+            }
+        });
+
+        mapView.addMapListener(new MapListener() {
+            @Override
+            public boolean onScroll(ScrollEvent event) {
+                if (!isCentralizing) {
+                    buttonGoToPosition.setImageResource(R.drawable.record_position_empty);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onZoom(ZoomEvent event) {
+                return false;
             }
         });
 
@@ -190,6 +209,16 @@ public class RecordFragment extends Fragment {
                 isRecording = false;
             }
         });
+
+        buttonRecordEnd.setOnClickListener(v -> {
+            Fragment newFragment = new SaveActivityFragment();
+
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            transaction.replace(R.id.frameLayout, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
 
         buttonRecordedData.setOnClickListener(v -> {
             bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -391,17 +420,25 @@ public class RecordFragment extends Fragment {
 
                 double altitude = location.getAltitude();
                 textAltitude.setText(String.format(Locale.getDefault(), "%.2f m", altitude));
+
+                GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+
+                if (userMarker != null) {
+                    userMarker.setPosition(userLocation);
+                }
+
+                if (isFirstLocationUpdate) {
+                    isFirstLocationUpdate = false;
+                    IMapController mapController = mapView.getController();
+                    buttonGoToPosition.setImageResource(R.drawable.record_position_full);
+                    isCentralizing = true;
+                    handler.postDelayed(() -> isCentralizing = false, 2000);
+                    mapController.animateTo(userLocation);
+
+                }
             }
-
-            GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
-            if (userMarker != null) {
-                userMarker.setPosition(userLocation);
-
-            }
-
-            IMapController mapController = mapView.getController();
-            mapController.setCenter(userLocation);
         }
+
     };
 
     private void cambiaStato(int stato) {
@@ -413,18 +450,17 @@ public class RecordFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
-            locationClient.getLastLocation()
-                    .addOnSuccessListener(requireActivity(), new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+            locationClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
+                if (location != null) {
+                    GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+                    IMapController mapController = mapView.getController();
+                    buttonGoToPosition.setImageResource(R.drawable.record_position_full);
+                    isCentralizing = true;
+                    handler.postDelayed(() -> isCentralizing = false, 1500);
+                    mapController.animateTo(userLocation);
+                }
+            });
 
-                                IMapController mapController = mapView.getController();
-                                mapController.animateTo(userLocation);
-                            }
-                        }
-                    });
         } else {
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);

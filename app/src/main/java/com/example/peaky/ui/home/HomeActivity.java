@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         // Carica il frammento iniziale (Home)
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+            bottomNavigationView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -60,7 +61,7 @@ public class HomeActivity extends AppCompatActivity {
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayout, fragment);
-        transaction.addToBackStack(null); // Aggiunge al back stack per la navigazione
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -77,8 +78,8 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         if (bottomNavigationView != null) {
             bottomNavigationView.setVisibility(View.VISIBLE);
-
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
         }
     }
+
 }

@@ -20,6 +20,7 @@ public class RecordViewModel extends ViewModel {
 
     private final SportRepository sportRepository;
     private final OSMRepository osmRepository;
+    private final MutableLiveData<List<Sport>> sportsLiveData = new MutableLiveData<>();
 
     public RecordViewModel(SportRepository sportRepository, OSMRepository osmRepository) {
         this.sportRepository = sportRepository;
@@ -29,10 +30,11 @@ public class RecordViewModel extends ViewModel {
 
     private void loadSports() {
         List<Sport> sports = sportRepository.getSports();
+        sportsLiveData.setValue(sports);
     }
 
     public LiveData<List<Sport>> getSports() {
-        return new MutableLiveData<>();
+        return sportsLiveData;
     }
 
     public int getBackgroundColor(int stato) {
