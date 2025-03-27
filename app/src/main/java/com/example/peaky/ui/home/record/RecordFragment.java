@@ -212,13 +212,11 @@ public class RecordFragment extends Fragment {
 
         buttonRecordEnd.setOnClickListener(v -> {
             Fragment newFragment = new SaveActivityFragment();
-
             FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
             transaction.replace(R.id.frameLayout, newFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         });
-
 
         buttonRecordedData.setOnClickListener(v -> {
             bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);

@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.peaky.R;
 import com.example.peaky.ui.home.record.RecordFragment;
+import com.example.peaky.ui.home.saveactivity.SaveActivityFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -76,10 +77,13 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        if (bottomNavigationView != null) {
-            bottomNavigationView.setVisibility(View.VISIBLE);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+
+        if (currentFragment instanceof SaveActivityFragment) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_record);
+        } else {
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+            bottomNavigationView.setVisibility(View.VISIBLE);
         }
     }
-
 }
