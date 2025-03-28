@@ -64,14 +64,10 @@ public class HomeActivity extends AppCompatActivity {
     public void onBackPressed() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         int currentDestination = navController.getCurrentDestination().getId();
-
-        if (currentDestination == R.id.saveActivityFragment) {
-            navController.popBackStack(R.id.navigation_record, false);
-        } else if (currentDestination == R.id.navigation_record) {
+        if (currentDestination == R.id.navigation_record) {
             navController.popBackStack(R.id.navigation_home, false);
         } else {
             super.onBackPressed();
         }
     }
-
 }

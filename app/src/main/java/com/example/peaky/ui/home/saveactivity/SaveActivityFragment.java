@@ -65,6 +65,16 @@ public class SaveActivityFragment extends Fragment {
                 bottomNavigationView.setSelectedItemId(R.id.navigation_home);
             }
         });
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        NavController navController = Navigation.findNavController(view);
+                        navController.popBackStack();
+                    }
+                });
     }
+
 
 }
