@@ -24,6 +24,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.os.Handler;
 import android.provider.Settings;
@@ -211,12 +213,10 @@ public class RecordFragment extends Fragment {
         });
 
         buttonRecordEnd.setOnClickListener(v -> {
-            Fragment newFragment = new SaveActivityFragment();
-            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            transaction.replace(R.id.frameLayout, newFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.saveActivityFragment);
         });
+
 
         buttonRecordedData.setOnClickListener(v -> {
             bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);

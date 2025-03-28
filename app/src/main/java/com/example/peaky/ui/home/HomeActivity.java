@@ -1,89 +1,77 @@
 package com.example.peaky.ui.home;
 
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 
-import androidx.annotation.NonNull;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.peaky.R;
-import com.example.peaky.ui.home.record.RecordFragment;
-import com.example.peaky.ui.home.saveactivity.SaveActivityFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private NavController navController;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        // Ottieni il NavHostFragment dal FragmentManager
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment navHostFragment = fragmentManager.findFragmentById(R.id.nav_host_fragment);
 
-        // Imposta l'ascoltatore del menu di navigazione
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
+        // Verifica che il NavHostFragment sia stato trovato
+        if (navHostFragment instanceof NavHostFragment) {
+            // Ottieni il NavController dal NavHostFragment
+            navController = ((NavHostFragment) navHostFragment).getNavController();
+        } else {
+            // Gestisci il caso in cui il NavHostFragment non è stato trovato
+            throw new IllegalStateException("NavHostFragment non trovato");
+        }
 
-                // Usa un approccio if-else per evitare il problema con il "switch"
-                if (item.getItemId() == R.id.navigation_home) {
-                    selectedFragment = new HomeFragment();
-                } else if (item.getItemId() == R.id.navigation_maps) {
-                    selectedFragment = new MapsFragment();
-                } else if (item.getItemId() == R.id.navigation_record) {
-                    selectedFragment = new RecordFragment();
-                } else if (item.getItemId() == R.id.navigation_challenges) {
-                    selectedFragment = new ChallengesFragment();
-                } else if (item.getItemId() == R.id.navigation_profile) {
-                    selectedFragment = new ProfileFragment();
-                }
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-                if (selectedFragment != null) {
-                    loadFragment(selectedFragment);
-                }
-
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            // Usa l'if invece di switch per fare la navigazione
+            if (item.getItemId() == R.id.navigation_home) {
+                navController.navigate(R.id.homeFragment);
+                return true;
+            } else if (item.getItemId() == R.id.navigation_maps) {
+                navController.navigate(R.id.mapsFragment);
+                return true;
+            } else if (item.getItemId() == R.id.navigation_record) {
+                navController.navigate(R.id.recordFragment);
+                return true;
+            } else if (item.getItemId() == R.id.navigation_challenges) {
+                navController.navigate(R.id.achievementsFragment);
+                return true;
+            } else if (item.getItemId() == R.id.navigation_profile) {
+                navController.navigate(R.id.profileFragment);
                 return true;
             }
+            return false;
         });
-
-        // Carica il frammento iniziale (Home)
-        if (savedInstanceState == null) {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-            bottomNavigationView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    // Metodo per caricare un frammento
-    private void loadFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frameLayout, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
     @Override
     public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        int currentDestination = navController.getCurrentDestination().getId();
 
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            fragmentManager.popBackStack();
+        if (currentDestination == R.id.saveActivityFragment) {
+            navController.popBackStack(R.id.navigation_record, false);
+        } else if (currentDestination == R.id.navigation_record) {
+            navController.popBackStack(R.id.navigation_home, false);
         } else {
             super.onBackPressed();
         }
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
-
-        if (currentFragment instanceof SaveActivityFragment) {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_record);
-        } else {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-            bottomNavigationView.setVisibility(View.VISIBLE);
-        }
     }
+
 }

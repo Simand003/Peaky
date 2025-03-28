@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
+    android:id="@+id/home_nav_graph"
     app:startDestination="@id/homeFragment">
 
     <fragment
@@ -15,7 +16,8 @@
         android:id="@+id/mapsFragment"
         android:name="com.example.peaky.ui.home.MapsFragment"
         android:label="Maps"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps" >
+    </fragment>
 
     <fragment
         android:id="@+id/recordFragment"

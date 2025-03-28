@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +46,8 @@ public class SaveActivityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         buttonBack.setOnClickListener(v -> {
-            getParentFragmentManager().popBackStack();
+            NavController navController = Navigation.findNavController(v);
+            navController.popBackStack();
         });
 
         buttonSave.setOnClickListener(v -> {
@@ -53,7 +56,7 @@ public class SaveActivityFragment extends Fragment {
 
             HomeFragment homeFragment = new HomeFragment();
             FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            transaction.replace(R.id.frameLayout, homeFragment);
+            transaction.replace(R.id.nav_host_fragment, homeFragment);
             transaction.commit();
 
             bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
@@ -63,4 +66,5 @@ public class SaveActivityFragment extends Fragment {
             }
         });
     }
+
 }
