@@ -19,6 +19,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -72,7 +73,7 @@ public class RecordFragment extends Fragment {
 
     private Spinner spinner;
 
-    private LinearLayout linearLayoutGPSLocator;
+    private LinearLayout linearLayoutGPSLocator, buttonsContainer;
     private TextView textGPSLocator, textAltitude;
     private static final long SEARCH_TIMEOUT = 10000;
     private long lastLocationUpdate = 0;
@@ -128,6 +129,7 @@ public class RecordFragment extends Fragment {
         textAltitude = view.findViewById(R.id.textAltitude);
 
         //Initializing the buttons
+        buttonsContainer = view.findViewById(R.id.buttons_container);
         buttonBack = view.findViewById(R.id.button_back);
         buttonGoToPosition = view.findViewById(R.id.button_go_to_position);
         buttonRecordAction = view.findViewById(R.id.button_record_action);
@@ -222,10 +224,47 @@ public class RecordFragment extends Fragment {
             bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
 
+        bottomSheetDataBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    resetButtonPosition(buttonsContainer);
+                } else {
+                    adjustButtonPosition(buttonsContainer, bottomSheet);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                adjustButtonPosition(buttonsContainer, bottomSheet);
+            }
+        });
+
         buttonReporterTools.setOnClickListener(v -> {
             bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
 
+    }
+
+    private void adjustButtonPosition(LinearLayout buttonLayout, View bottomSheet) {
+        int marginBottom = 16; // Margine di default
+        int marginRight = 16;  // Margine fisso a destra
+
+        // Se BottomSheet 1 è aperta, ottieni dinamicamente la sua altezza
+        if (bottomSheet.getHeight() > 0) {
+            marginBottom += bottomSheet.getHeight();
+        }
+
+        // Aggiorna i margini del LinearLayout
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) buttonLayout.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin, marginRight, marginBottom);
+        buttonLayout.setLayoutParams(params);
+    }
+
+    private void resetButtonPosition(LinearLayout buttonLayout) {
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) buttonLayout.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin, 16, 16); // Riporta ai margini iniziali
+        buttonLayout.setLayoutParams(params);
     }
 
     private void checkLocationPermission() {
