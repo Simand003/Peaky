@@ -21,7 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.peaky.R;
-import com.example.peaky.model.GenderUser;
+import com.example.peaky.model.user.GenderUser;
 import com.example.peaky.ui.home.HomeActivity;
 import com.example.peaky.ui.login.viewmodel.UserViewModel;
 import com.example.peaky.ui.login.viewmodel.UserViewModelFactory;

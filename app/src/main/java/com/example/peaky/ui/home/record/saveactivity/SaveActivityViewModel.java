@@ -1,4 +1,4 @@
-package com.example.peaky.ui.home.saveactivity;
+package com.example.peaky.ui.home.record.saveactivity;
 
 import androidx.lifecycle.ViewModel;
 

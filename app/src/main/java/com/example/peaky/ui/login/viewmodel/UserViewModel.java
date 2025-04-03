@@ -12,7 +12,7 @@ import androidx.navigation.NavOptions;
 
 import com.example.peaky.R;
 import com.example.peaky.model.Result;
-import com.example.peaky.model.User;
+import com.example.peaky.model.user.User;
 import com.example.peaky.repository.user.UserRepository;
 import com.example.peaky.ui.home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;

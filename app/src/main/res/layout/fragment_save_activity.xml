@@ -51,222 +51,24 @@
 
         </RelativeLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/container_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/activity_name"
+            android:layout_below="@id/header_container"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textField_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="textLongMessage"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>
-
-
-
-    <LinearLayout
-        android:id="@+id/bottomSheet_data"
-        style="@style/Widget.Material3.BottomSheet.Modal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        app:behavior_draggable="true"
-        app:behavior_hideable="true"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        >
-
-        <ImageView
-            android:id="@+id/arrowIcon"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/bs_ic_line" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/activity_data"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/md_theme_onSurface_mediumContrast"/>
-
-            <Spinner
-                android:id="@+id/spinner_sports"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:padding="4dp"
-                android:textAlignment="center" />
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:text="@string/time"
-                        android:textAlignment="center"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/md_theme_onSurface_mediumContrast"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:text="@string/distance"
-                        android:textAlignment="center"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/md_theme_onSurface_mediumContrast"/>
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/_00_00_00"
-                        android:textAlignment="center"
-                        android:textSize="24sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/_0_00_km"
-                        android:textAlignment="center"
-                        android:textSize="24sp" />
-                </TableRow>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/elevation_gain"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md_theme_onSurface_mediumContrast"/>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:text="@string/positive_0_m"
-                        android:textAlignment="center"
-                        android:textSize="24sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:text="@string/negative_0_m"
-                        android:textAlignment="center"
-                        android:textSize="24sp" />
-                </TableRow>
-            </TableLayout>
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/bottomSheet_reporter"
-        style="@style/Widget.Material3.BottomSheet.Modal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        app:behavior_draggable="true"
-        app:behavior_hideable="true"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-
-        >
-
-        <ImageView
-            android:id="@+id/arrowIcon2"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/bs_ic_line" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/bottomSheetDataContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="16dp"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/reporters_tool"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md_theme_onSurface_mediumContrast"/>
-
-                <TextView
-                    android:id="@+id/pinLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/add_a_point_of_interest"
-                    android:textColor="@color/md_theme_onSurface_mediumContrast"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="empty (soon...)"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/editTextDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="start|top"
-                    android:hint="@string/notes_for_reporters"
-                    android:inputType="textMultiLine" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

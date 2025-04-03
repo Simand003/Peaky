@@ -3,9 +3,9 @@ package com.example.peaky.source.user;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.peaky.model.GenderUser;
+import com.example.peaky.model.user.GenderUser;
 import com.example.peaky.model.Result;
-import com.example.peaky.model.User;
+import com.example.peaky.model.user.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;

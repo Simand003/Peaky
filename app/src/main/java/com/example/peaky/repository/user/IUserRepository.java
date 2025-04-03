@@ -3,7 +3,7 @@ package com.example.peaky.repository.user;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.peaky.model.Result;
-import com.example.peaky.model.User;
+import com.example.peaky.model.user.User;
 
 public interface IUserRepository {
     MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered);

@@ -4,6 +4,8 @@ import static com.example.peaky.ui.home.record.RecordFragment.FOUND;
 import static com.example.peaky.ui.home.record.RecordFragment.NOT_FOUND;
 import static com.example.peaky.ui.home.record.RecordFragment.SEARCHING;
 
+import android.view.View;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -21,6 +23,7 @@ public class RecordViewModel extends ViewModel {
     private final SportRepository sportRepository;
     private final OSMRepository osmRepository;
     private final MutableLiveData<List<Sport>> sportsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> buttonMarginBottom = new MutableLiveData<>(16);
 
     public RecordViewModel(SportRepository sportRepository, OSMRepository osmRepository) {
         this.sportRepository = sportRepository;
@@ -35,6 +38,9 @@ public class RecordViewModel extends ViewModel {
 
     public LiveData<List<Sport>> getSports() {
         return sportsLiveData;
+    }
+    public LiveData<Integer> getButtonMarginBottom() {
+        return buttonMarginBottom;
     }
 
     public int getBackgroundColor(int stato) {
@@ -52,6 +58,20 @@ public class RecordViewModel extends ViewModel {
             default: return SEARCHING;
         }
     }
+    public void adjustButtonPosition(View bottomSheet) {
+        int marginBottom = 16; // Margine di default
+
+        if (bottomSheet.getHeight() > 0) {
+            marginBottom += bottomSheet.getHeight();
+        }
+
+        buttonMarginBottom.setValue(marginBottom);
+    }
+
+    public void resetButtonPosition() {
+        buttonMarginBottom.setValue(16);
+    }
+
 }
 
 

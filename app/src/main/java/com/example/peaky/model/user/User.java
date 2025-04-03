@@ -1,4 +1,4 @@
-package com.example.peaky.model;
+package com.example.peaky.model.user;
 
 import java.util.Date;
 

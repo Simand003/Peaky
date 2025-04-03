@@ -1,6 +1,6 @@
 package com.example.peaky.source.user;
 
-import com.example.peaky.model.User;
+import com.example.peaky.model.user.User;
 import com.example.peaky.repository.user.UserResponseCallback;
 
 public abstract class BaseUserAuthenticationRemoteDataSource {

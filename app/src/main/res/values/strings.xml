@@ -60,5 +60,24 @@
     <string name="searching">Searching…</string>
     <string name="save">Save</string>
     <string name="save_activity">Save activity</string>
+    <string name="activity_name">Activity name</string>
+    <string name="your_equipment">Your equipment</string>
+    <string name="_0">0</string>
+    <string name="technical_clothing">TECHNICAL CLOTHING</string>
+    <string name="stats">Stats</string>
+    <string name="footwear">FOOTWEAR</string>
+    <string name="tools">TOOLS</string>
+    <string name="wearables">WEARABLES</string>
+    <string name="bikes">BIKES</string>
+    <string name="add_new_equipment">Add new equipment</string>
+    <string name="equipment_category">Equipment category</string>
+    <string name="equipment">Equipment</string>
+    <string name="brand">Brand</string>
+    <string name="brand_name">Brand name</string>
+    <string name="model">Model</string>
+    <string name="purchase_date">Purchase date</string>
+    <string name="price">Price</string>
+    <string name="default_sports">Default sports</string>
+    <string name="notes">Notes</string>
 
 </resources>

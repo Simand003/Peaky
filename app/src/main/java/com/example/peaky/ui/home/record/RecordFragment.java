@@ -23,7 +23,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -44,7 +43,6 @@ import com.example.peaky.adapter.SportAdapter;
 import com.example.peaky.repository.OSMRepository;
 import com.example.peaky.repository.SportRepository;
 import com.example.peaky.source.osm.OSMDataSource;
-import com.example.peaky.ui.home.saveactivity.SaveActivityFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -219,6 +217,11 @@ public class RecordFragment extends Fragment {
             navController.navigate(R.id.saveActivityFragment);
         });
 
+        recordViewModel.getButtonMarginBottom().observe(getViewLifecycleOwner(), marginBottom -> {
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) buttonsContainer.getLayoutParams();
+            params.setMargins(params.leftMargin, params.topMargin, 16, marginBottom);
+            buttonsContainer.setLayoutParams(params);
+        });
 
         buttonRecordedData.setOnClickListener(v -> {
             bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -228,15 +231,15 @@ public class RecordFragment extends Fragment {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    resetButtonPosition(buttonsContainer);
+                    recordViewModel.resetButtonPosition();
                 } else {
-                    adjustButtonPosition(buttonsContainer, bottomSheet);
+                    recordViewModel.adjustButtonPosition(bottomSheet);
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                adjustButtonPosition(buttonsContainer, bottomSheet);
+                recordViewModel.adjustButtonPosition(bottomSheet);
             }
         });
 
@@ -244,27 +247,6 @@ public class RecordFragment extends Fragment {
             bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
 
-    }
-
-    private void adjustButtonPosition(LinearLayout buttonLayout, View bottomSheet) {
-        int marginBottom = 16; // Margine di default
-        int marginRight = 16;  // Margine fisso a destra
-
-        // Se BottomSheet 1 è aperta, ottieni dinamicamente la sua altezza
-        if (bottomSheet.getHeight() > 0) {
-            marginBottom += bottomSheet.getHeight();
-        }
-
-        // Aggiorna i margini del LinearLayout
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) buttonLayout.getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin, marginRight, marginBottom);
-        buttonLayout.setLayoutParams(params);
-    }
-
-    private void resetButtonPosition(LinearLayout buttonLayout) {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) buttonLayout.getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin, 16, 16); // Riporta ai margini iniziali
-        buttonLayout.setLayoutParams(params);
     }
 
     private void checkLocationPermission() {

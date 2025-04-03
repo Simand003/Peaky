@@ -3,7 +3,7 @@ package com.example.peaky.repository.user;
 import androidx.lifecycle.LiveData;
 
 import com.example.peaky.model.Result;
-import com.example.peaky.model.User;
+import com.example.peaky.model.user.User;
 import com.example.peaky.source.user.UserAuthenticationFirebaseDataSource;
 import com.example.peaky.source.user.UserFirestoreFirebaseDataSource;
 
