@@ -2,25 +2,17 @@ package com.example.peaky.model.equipment;
 
 public class EquipmentType {
     private String name;
-    //private int icon;
 
-    public EquipmentType(String name /*, int icon */) {
+    public EquipmentType(String name) {
         this.name = name;
-        //this.icon = icon;
     }
 
     public String getName() {
         return name;
     }
-/*
-    public int getIcon() {
-        return icon;
-    }
 
-    public void setIcon(int icon) {
-        this.icon = icon;
+    public void setName(String name) {
+        this.name = name;
     }
-
- */
 }
 

@@ -13,9 +13,9 @@ import com.example.peaky.model.Sport;
 
 import java.util.List;
 
-public class SportAdapter extends ArrayAdapter<Sport> {
+public class SportSpinnerAdapter extends ArrayAdapter<Sport> {
 
-    public SportAdapter(Context context, List<Sport> sports) {
+    public SportSpinnerAdapter(Context context, List<Sport> sports) {
         super(context, 0, sports);
     }
 

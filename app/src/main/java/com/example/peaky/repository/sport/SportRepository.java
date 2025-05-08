@@ -1,9 +1,10 @@
-package com.example.peaky.repository;
+package com.example.peaky.repository.sport;
 
 import android.content.Context;
 
 import com.example.peaky.R;
 import com.example.peaky.model.Sport;
+import com.example.peaky.source.SportDataSource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,9 +17,11 @@ import java.util.List;
 
 public class SportRepository {
     private final Context context;
+    private final SportDataSource sportDataSource;
 
-    public SportRepository(Context context) {
+    public SportRepository(Context context, SportDataSource sportDataSource) {
         this.context = context;
+        this.sportDataSource = sportDataSource;
     }
 
     public List<Sport> getSports() {
@@ -53,6 +56,10 @@ public class SportRepository {
         }
 
         return sportsList;
+    }
+
+    public void setDefaultEquipmentForSport(String sportName, String type, String equipmentId, String userId) {
+        sportDataSource.setDefaultEquipmentForSport(sportName, type, equipmentId, userId);
     }
 }
 

@@ -2,49 +2,28 @@
   "categories": [
     {
       "name": "Technical Clothing",
-      "types": [
-        { "name": "Jackets", "icon": "ic_jacket" },
-        { "name": "Pants", "icon": "ic_pants" },
-        { "name": "Shirts", "icon": "ic_shirt" },
-        { "name": "Pile", "icon": "ic_pile" },
-        { "name": "Technical Socks", "icon": "ic_socks" }
-      ]
+      "icon": "ic_technical_clothing",
+      "types": ["Jackets", "Pants", "Shirts", "Fleece"]
     },
     {
       "name": "Footwear",
-      "types": [
-        { "name": "Boots", "icon": "ic_boots" },
-        { "name": "Trail Shoes", "icon": "ic_trail_shoes" },
-        { "name": "Hiking Shoes", "icon": "ic_hiking_shoes" },
-        { "name": "Climbing Shoes", "icon": "ic_climbing_shoes" },
-        { "name": "Snowshoes", "icon": "ic_snowshoes" }
-      ]
+      "icon": "ic_footwear",
+      "types": ["Boots", "Trail Shoes", "Hiking Shoes", "Climbing Shoes"]
     },
     {
-      "name": "Tools",
-      "types": [
-        { "name": "Poles", "icon": "ic_poles" },
-        { "name": "Backpacks", "icon": "ic_backpack" },
-        { "name": "Ice Axe", "icon": "ic_ice_axe" }
-      ]
-    },
-    {
-      "name": "Wearables",
-      "types": [
-        { "name": "Helmet", "icon": "ic_helmet" },
-        { "name": "Harness", "icon": "ic_harness" },
-        { "name": "Watch", "icon": "ic_watch" },
-        { "name": "Crampons", "icon": "ic_crampons" },
-        { "name": "Skis", "icon": "ic_skis" },
-        { "name": "Snowshoes", "icon": "ic_snowshoes" }
-      ]
+      "name": "Equipment",
+      "icon": "ic_equipment",
+      "types": ["Poles", "Backpacks", "Ice Axe", "Helmet", "Harness", "Crampons", "Skis", "Snowshoes"]
     },
     {
       "name": "Bikes",
-      "types": [
-        { "name": "Mountain Bike", "icon": "ic_mtb" },
-        { "name": "Gravel Bike", "icon": "ic_gravel_bike" }
-      ]
+      "icon": "ic_bikes",
+      "types": ["Mountain Bike", "Gravel Bike"]
+    },
+    {
+      "name": "Wearables",
+      "icon": "ic_wearables",
+      "types": ["Watch", "Gloves", "Sunglasses", "Headlamp"]
     }
   ]
 }

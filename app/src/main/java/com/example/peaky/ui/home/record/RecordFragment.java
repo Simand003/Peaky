@@ -39,9 +39,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.peaky.R;
-import com.example.peaky.adapter.SportAdapter;
+import com.example.peaky.adapter.SportSpinnerAdapter;
 import com.example.peaky.repository.OSMRepository;
-import com.example.peaky.repository.SportRepository;
+import com.example.peaky.repository.sport.SportRepository;
+import com.example.peaky.source.SportDataSource;
 import com.example.peaky.source.osm.OSMDataSource;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -50,6 +51,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -107,7 +109,8 @@ public class RecordFragment extends Fragment {
 
         Configuration.getInstance().setUserAgentValue(requireContext().getPackageName());
 
-        sportRepository = new SportRepository(requireContext());
+        SportDataSource sportDataSource = new SportDataSource(FirebaseFirestore.getInstance());
+        sportRepository = new SportRepository(requireContext(), sportDataSource);
         osmRepository = new OSMRepository(new OSMDataSource());
         RecordViewModelFactory factory = new RecordViewModelFactory(sportRepository, osmRepository);
         recordViewModel = new ViewModelProvider(this, factory).get(RecordViewModel.class);
@@ -166,7 +169,7 @@ public class RecordFragment extends Fragment {
 
         recordViewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
             if (sports != null && !sports.isEmpty()) {
-                SportAdapter adapter = new SportAdapter(requireContext(), sports);
+                SportSpinnerAdapter adapter = new SportSpinnerAdapter(requireContext(), sports);
                 spinner.setAdapter(adapter);
             }
         });

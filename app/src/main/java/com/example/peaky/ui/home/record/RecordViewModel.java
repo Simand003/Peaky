@@ -12,7 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.peaky.R;
 import com.example.peaky.model.Sport;
 import com.example.peaky.repository.OSMRepository;
-import com.example.peaky.repository.SportRepository;
+import com.example.peaky.repository.sport.SportRepository;
 
 import java.util.List;
 
@@ -39,6 +39,7 @@ public class RecordViewModel extends ViewModel {
     public LiveData<List<Sport>> getSports() {
         return sportsLiveData;
     }
+
     public LiveData<Integer> getButtonMarginBottom() {
         return buttonMarginBottom;
     }

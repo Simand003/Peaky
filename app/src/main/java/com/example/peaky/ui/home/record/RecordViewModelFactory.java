@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.peaky.repository.OSMRepository;
-import com.example.peaky.repository.SportRepository;
-
-import android.content.Context;
+import com.example.peaky.repository.sport.SportRepository;
 
 public class RecordViewModelFactory implements ViewModelProvider.Factory {
 

@@ -1,241 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     tools:context=".ui.home.profile.ManageEquipmentFragment">
 
-    <RelativeLayout
-        android:id="@+id/header_container"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md_theme_surfaceContainerLow">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/button_back"
-            style="@style/Widget.Material3.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/back"
-            android:layout_centerVertical="true"
-            android:textColor="@color/md_theme_onSurface_mediumContrast"
-            />
+            android:orientation="vertical"
+            >
 
-        <TextView
-            android:id="@+id/textAltitudeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_new_equipment"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
-
-        <Button
-            android:id="@+id/button_save"
-            style="@style/Widget.Material3.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/md_theme_onSurface_mediumContrast"
-            />
-    </RelativeLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/equipment_category"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/md_theme_onSurface_mediumContrast"
-        />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/spinner_border"
-        android:padding="12dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/equipment"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/md_theme_onSurface_mediumContrast"
-        />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/spinner_border"
-        android:padding="12dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/brand"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/md_theme_onSurface_mediumContrast"
-        />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textField_brand"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:imeOptions="actionNext"
-        android:inputType="textLongMessage"
-        android:hint="@string/brand_name"
-        android:background="@drawable/spinner_border"
-        android:padding="12dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/model"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/md_theme_onSurface_mediumContrast"
-        />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textField_model"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:imeOptions="actionDone"
-        android:inputType="textLongMessage"
-        android:hint="@string/model"
-        android:background="@drawable/spinner_border"
-        android:padding="12dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
-
-        <TableRow>
-            <TextView
-                android:layout_width="0dp"
+            <RelativeLayout
+                android:id="@+id/header_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/purchase_date"
-                android:textStyle="bold"
-                android:textColor="@color/md_theme_onSurface_mediumContrast"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                />
+                android:background="@color/md_theme_surfaceContainerLow">
+
+                <Button
+                    android:id="@+id/button_back"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/back"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast"
+                    />
+
+                <TextView
+                    android:id="@+id/textAltitudeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_new_equipment"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+
+                <Button
+                    android:id="@+id/button_save"
+                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast"
+                    />
+            </RelativeLayout>
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/price"
+                android:text="@string/equipment_category"
                 android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:textColor="@color/md_theme_onSurface_mediumContrast"
-                android:layout_marginStart="8dp"
                 />
-        </TableRow>
 
-        <TableRow>
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/select_data"
-                android:layout_width="0dp"
+            <Spinner
+                android:id="@+id/spinner_equipment_category"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:imeOptions="actionDone"
-                android:inputType="text"
-                android:hint="@string/purchase_date"
                 android:background="@drawable/spinner_border"
                 android:padding="12dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textField_price"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/textView_equipment"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal"
-                android:hint="0.0"
+                android:text="@string/equipment"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                android:alpha="0.5"
+                />
+
+            <Spinner
+                android:id="@+id/spinner_equipment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/spinner_border"
                 android:padding="12dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:enabled="false"
+                android:alpha="0.5"
                 />
-        </TableRow>
-    </TableLayout>
 
-    <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/brand"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textField_brand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="textLongMessage"
+                android:hint="@string/brand_name"
+                android:background="@drawable/spinner_border"
+                android:padding="12dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/model"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textField_model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="textLongMessage"
+                android:hint="@string/model"
+                android:background="@drawable/spinner_border"
+                android:padding="12dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TableRow>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/purchase_date"
+                        android:textStyle="bold"
+                        android:textColor="@color/md_theme_onSurface_mediumContrast"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/price"
+                        android:textStyle="bold"
+                        android:textColor="@color/md_theme_onSurface_mediumContrast"
+                        android:layout_marginStart="8dp"
+                        />
+                </TableRow>
+
+                <TableRow>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/select_data"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:imeOptions="actionDone"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:hint="@string/purchase_date"
+                        android:background="@drawable/spinner_border"
+                        android:padding="12dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="8dp"
+                        />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textField_price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:hint="0.0"
+                        android:background="@drawable/spinner_border"
+                        android:padding="12dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginStart="8dp"
+                        />
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/default_sports"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/button_default_sport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/no_sport_selected"
+                android:focusable="false"
+                android:cursorVisible="false"
+                android:inputType="textNoSuggestions"
+                android:clickable="true"
+                android:importantForAutofill="no"
+                android:background="@drawable/spinner_border"
+                android:padding="12dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notes"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textField_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:hint="@string/notes"
+                android:background="@drawable/spinner_border"
+                android:padding="12dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomSheet_default_sports"
+        style="@style/Widget.Material3.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/default_sports"
-        android:textStyle="bold"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/md_theme_onSurface_mediumContrast"
-        />
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        app:behavior_draggable="true"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/spinner_border"
-        android:padding="12dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        />
+        <ImageView
+            android:id="@+id/arrowIcon"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/bs_ic_line" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/notes"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textColor="@color/md_theme_onSurface_mediumContrast"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textField_notes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:hint="@string/notes"
-        android:background="@drawable/spinner_border"
-        android:padding="12dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/select_one_or_more_sports"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                />
 
-</LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_sports"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

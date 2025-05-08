@@ -79,5 +79,7 @@
     <string name="price">Price</string>
     <string name="default_sports">Default sports</string>
     <string name="notes">Notes</string>
+    <string name="select_one_or_more_sports">Select one or more sports</string>
+    <string name="no_sport_selected">No sport selected</string>
 
 </resources>

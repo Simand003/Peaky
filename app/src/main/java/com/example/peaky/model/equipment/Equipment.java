@@ -1,36 +1,55 @@
 package com.example.peaky.model.equipment;
 
-import com.example.peaky.model.Sport;
-
 import java.util.Date;
-import java.util.List;
 
 public class Equipment {
 
+    private String id;
+    private String userId;
     private EquipmentType type;
     private String brand;
     private String model;
     private Date purchase_date;
     private Double price;
-    private List<Sport> default_sports;
     private String notes;
     private double distance;
     private double elevation_gain;
     private int uses;
     private int peaks_reached;
 
-    public Equipment (EquipmentType type, String brand, String model, Date purchase_date, double price, List<Sport> default_sports, String notes, double distance, double elevation_gain, int uses, int peaks_reached) {
+    public Equipment (String id, String userId, EquipmentType type, String brand, String model, Date purchase_date, double price, String notes, double distance, double elevation_gain, int uses, int peaks_reached) {
+        this.id = id;
+        this.userId = userId;
         this.type = type;
         this.brand = brand;
         this.model = model;
         this.purchase_date = purchase_date;
         this.price = price;
-        this.default_sports = default_sports;
         this.elevation_gain = elevation_gain;
         this.uses = uses;
         this.peaks_reached = peaks_reached;
         this.notes = notes;
         this.distance = distance;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Date getPurchase_date() {
+        return purchase_date;
     }
 
     public EquipmentType getType() {
@@ -63,14 +82,6 @@ public class Equipment {
 
     public void setPurchase_date(Date purchase_date) {
         this.purchase_date = purchase_date;
-    }
-
-    public List<Sport> getDefault_sports() {
-        return default_sports;
-    }
-
-    public void setDefault_sports(List<Sport> default_sports) {
-        this.default_sports = default_sports;
     }
 
     public String getNotes() {

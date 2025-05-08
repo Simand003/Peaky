@@ -29,5 +29,7 @@ public class Constants {
     public static final String CANCEL = "Cancel";
     public static final String GO_TO_SETTINGS = "Go to Settings";
 
-
+    public static final String SELECT_A_CATEGORY = "Select a category";
+    public static final String SELECT_AN_EQUIPMENT = "Select an equipment";
+    public static final String EQUIPMENT_SAVE = "Equipment saved successfully";
 }
