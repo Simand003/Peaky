@@ -1,6 +1,7 @@
 package com.example.peaky.ui.login;
 
 import static com.example.peaky.util.Constants.BIRTH_DATE_INFO_MESSAGE;
+import static com.example.peaky.util.Constants.FILL_ALL_REQUIRED_FIELDS;
 import static com.example.peaky.util.Constants.GENDER_INFO_MESSAGE;
 
 import android.app.AlertDialog;
@@ -174,7 +175,7 @@ public class UserInfoFragment extends Fragment {
                 String gender = genderEditText.getText().toString().trim();
 
                 if (name.isEmpty() || surname.isEmpty() || gender.isEmpty()) {
-                    Toast.makeText(getContext(), "Please fill all required fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), FILL_ALL_REQUIRED_FIELDS, Toast.LENGTH_SHORT).show();
                     return;
                 }
 

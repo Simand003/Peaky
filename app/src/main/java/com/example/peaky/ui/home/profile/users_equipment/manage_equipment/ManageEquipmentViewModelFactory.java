@@ -1,4 +1,4 @@
-package com.example.peaky.ui.home.profile;
+package com.example.peaky.ui.home.profile.users_equipment.manage_equipment;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

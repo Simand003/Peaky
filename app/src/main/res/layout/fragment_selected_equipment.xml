@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.home.profile.users_equipment.selected_equipment.SelectedEquipmentFragment">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:id="@+id/header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_surfaceContainerLow">
+
+        <Button
+            android:id="@+id/button_back"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/back"
+            android:textColor="@color/md_theme_onSurface_mediumContrast" />
+
+        <TextView
+            android:id="@+id/selected_equipment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/brand_model"
+            android:textColor="@color/md_theme_onSurface_mediumContrast"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Informazioni -->
+    <include layout="@layout/equipment_detail_row" android:id="@+id/brand_row" />
+    <include layout="@layout/equipment_detail_row" android:id="@+id/model_row" />
+    <include layout="@layout/equipment_detail_row" android:id="@+id/date_row" />
+    <include layout="@layout/equipment_detail_row" android:id="@+id/price_row" />
+    <include layout="@layout/equipment_detail_row" android:id="@+id/distance_row" />
+    <include layout="@layout/equipment_detail_row" android:id="@+id/elevation_row" />
+    <include layout="@layout/equipment_detail_row" android:id="@+id/uses_row" />
+    <include layout="@layout/equipment_detail_row" android:id="@+id/peaks_row" />
+
+    <LinearLayout
+        android:id="@+id/deafult_sports_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/text_title_deafult_sports"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_sports"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_onSurface_mediumContrast"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/text_deafult_sports_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/default_sports"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notes_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/text_title_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notes"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_onSurface_mediumContrast"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/text_notes_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notes"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+    </LinearLayout>
+
+</LinearLayout>

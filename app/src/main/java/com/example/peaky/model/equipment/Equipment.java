@@ -1,8 +1,11 @@
 package com.example.peaky.model.equipment;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
-public class Equipment {
+public class Equipment implements Serializable {
 
     private String id;
     private String userId;
@@ -16,6 +19,8 @@ public class Equipment {
     private double elevation_gain;
     private int uses;
     private int peaks_reached;
+
+    public Equipment() {}
 
     public Equipment (String id, String userId, EquipmentType type, String brand, String model, Date purchase_date, double price, String notes, double distance, double elevation_gain, int uses, int peaks_reached) {
         this.id = id;
@@ -52,6 +57,10 @@ public class Equipment {
         return purchase_date;
     }
 
+    public void setPurchase_date(Date purchase_date) {
+        this.purchase_date = purchase_date;
+    }
+
     public EquipmentType getType() {
         return type;
     }
@@ -74,14 +83,6 @@ public class Equipment {
 
     public void setModel(String model) {
         this.model = model;
-    }
-
-    public Date getPurchaseDate() {
-        return purchase_date;
-    }
-
-    public void setPurchase_date(Date purchase_date) {
-        this.purchase_date = purchase_date;
     }
 
     public String getNotes() {
@@ -132,4 +133,9 @@ public class Equipment {
         this.price = price;
     }
 
+    public String getFormattedPurchaseDate() {
+        if (purchase_date == null) return "";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        return sdf.format(purchase_date);
+    }
 }

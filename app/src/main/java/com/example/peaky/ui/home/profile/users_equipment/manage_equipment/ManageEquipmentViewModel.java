@@ -1,4 +1,4 @@
-package com.example.peaky.ui.home.profile;
+package com.example.peaky.ui.home.profile.users_equipment.manage_equipment;
 
 import android.view.View;
 

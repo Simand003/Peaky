@@ -70,16 +70,24 @@
     <string name="wearables">WEARABLES</string>
     <string name="bikes">BIKES</string>
     <string name="add_new_equipment">Add new equipment</string>
-    <string name="equipment_category">Equipment category</string>
-    <string name="equipment">Equipment</string>
-    <string name="brand">Brand</string>
+    <string name="equipment_category">Equipment category *</string>
+    <string name="equipment">Equipment *</string>
+    <string name="brand_x">Brand *</string>
     <string name="brand_name">Brand name</string>
-    <string name="model">Model</string>
+    <string name="model_x">Model *</string>
     <string name="purchase_date">Purchase date</string>
     <string name="price">Price</string>
     <string name="default_sports">Default sports</string>
     <string name="notes">Notes</string>
     <string name="select_one_or_more_sports">Select one or more sports</string>
     <string name="no_sport_selected">No sport selected</string>
+    <string name="model">Model</string>
+    <string name="info">Info</string>
+    <string name="brand_model">brand+model</string>
+    <string name="brand">Brand</string>
+    <string name="distance_min">Distance</string>
+    <string name="elevation_gain_min">Elevation gain</string>
+    <string name="uses">Uses</string>
+    <string name="peaks_reached">Peaks reached</string>
 
 </resources>

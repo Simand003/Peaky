@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.home.profile.ManageEquipmentFragment">
+    tools:context=".ui.home.profile.users_equipment.manage_equipment.ManageEquipmentFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,8 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/header_container"
@@ -27,131 +26,122 @@
                     style="@style/Widget.Material3.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/back"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/md_theme_onSurface_mediumContrast"
-                    />
+                    android:text="@string/back"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast" />
 
                 <TextView
                     android:id="@+id/textAltitudeLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/add_new_equipment"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
+                    android:text="@string/add_new_equipment"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/button_save"
                     style="@style/Widget.Material3.Button.TextButton.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/save"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
-                    android:textColor="@color/md_theme_onSurface_mediumContrast"
-                    />
+                    android:layout_centerVertical="true"
+                    android:text="@string/save"
+                    android:textColor="@color/md_theme_onSurface_mediumContrast" />
             </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/equipment_category"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:text="@string/equipment_category"
                 android:textColor="@color/md_theme_onSurface_mediumContrast"
-                />
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinner_equipment_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/spinner_border"
-                android:padding="12dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="16dp"
-                />
+                android:background="@drawable/spinner_border"
+                android:padding="12dp" />
 
             <TextView
                 android:id="@+id/textView_equipment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/equipment"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="@color/md_theme_onSurface_mediumContrast"
                 android:alpha="0.5"
-                />
+                android:text="@string/equipment"
+                android:textColor="@color/md_theme_onSurface_mediumContrast"
+                android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinner_equipment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/spinner_border"
-                android:padding="12dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="16dp"
-                android:enabled="false"
                 android:alpha="0.5"
-                />
+                android:background="@drawable/spinner_border"
+                android:enabled="false"
+                android:padding="12dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/brand"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:text="@string/brand_x"
                 android:textColor="@color/md_theme_onSurface_mediumContrast"
-                />
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textField_brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/spinner_border"
+                android:hint="@string/brand_name"
                 android:imeOptions="actionNext"
                 android:inputType="textLongMessage"
-                android:hint="@string/brand_name"
-                android:background="@drawable/spinner_border"
-                android:padding="12dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                />
+                android:padding="12dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/model"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:text="@string/model_x"
                 android:textColor="@color/md_theme_onSurface_mediumContrast"
-                />
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textField_model"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/spinner_border"
+                android:hint="@string/model"
                 android:imeOptions="actionDone"
                 android:inputType="textLongMessage"
-                android:hint="@string/model"
-                android:background="@drawable/spinner_border"
-                android:padding="12dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
+                android:padding="12dp" />
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -159,108 +149,116 @@
                 android:padding="16dp">
 
                 <TableRow>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/purchase_date"
-                        android:textStyle="bold"
-                        android:textColor="@color/md_theme_onSurface_mediumContrast"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/purchase_date"
+                        android:textColor="@color/md_theme_onSurface_mediumContrast"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:text="@string/price"
-                        android:textStyle="bold"
                         android:textColor="@color/md_theme_onSurface_mediumContrast"
-                        android:layout_marginStart="8dp"
-                        />
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow>
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/select_data"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:imeOptions="actionDone"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:inputType="none"
-                        android:hint="@string/purchase_date"
-                        android:background="@drawable/spinner_border"
-                        android:padding="12dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginEnd="8dp"
-                        />
+                        android:layout_weight="1"
+                        android:background="@drawable/spinner_border"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:hint="@string/purchase_date"
+                        android:imeOptions="actionDone"
+                        android:inputType="none"
+                        android:padding="12dp" />
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/textField_price"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/spinner_border"
+                        android:hint="0.0"
                         android:imeOptions="actionDone"
                         android:inputType="numberDecimal"
-                        android:hint="0.0"
-                        android:background="@drawable/spinner_border"
-                        android:padding="12dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginStart="8dp"
-                        />
+                        android:padding="12dp" />
                 </TableRow>
             </TableLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/default_sports"
-                android:textStyle="bold"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:text="@string/default_sports"
                 android:textColor="@color/md_theme_onSurface_mediumContrast"
-                />
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/button_default_sport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/no_sport_selected"
-                android:focusable="false"
-                android:cursorVisible="false"
-                android:inputType="textNoSuggestions"
-                android:clickable="true"
-                android:importantForAutofill="no"
-                android:background="@drawable/spinner_border"
-                android:padding="12dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/spinner_border"
+                android:clickable="true"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:hint="@string/no_sport_selected"
+                android:importantForAutofill="no"
+                android:inputType="textNoSuggestions"
+                android:padding="12dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/notes"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:text="@string/notes"
                 android:textColor="@color/md_theme_onSurface_mediumContrast"
-                />
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textField_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:hint="@string/notes"
-                android:background="@drawable/spinner_border"
-                android:padding="12dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/spinner_border"
+                android:hint="@string/notes"
+                android:inputType="textMultiLine"
+                android:padding="12dp" />
+
+            <TextView
+                android:id="@+id/text_required_fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fields_marked_with_are_mandatory"
+                android:textColor="@color/red"
+                android:layout_below="@id/container_date"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
         </LinearLayout>
 
     </ScrollView>

@@ -1,6 +1,7 @@
-package com.example.peaky.ui.home.profile;
+package com.example.peaky.ui.home.profile.users_equipment.manage_equipment;
 
 import static com.example.peaky.util.Constants.EQUIPMENT_SAVE;
+import static com.example.peaky.util.Constants.FILL_ALL_REQUIRED_FIELDS;
 import static com.example.peaky.util.Constants.SELECT_AN_EQUIPMENT;
 import static com.example.peaky.util.Constants.SELECT_A_CATEGORY;
 
@@ -59,7 +60,6 @@ public class ManageEquipmentFragment extends Fragment {
     private RecyclerView recyclerViewSport;
     private BottomSheetBehavior<View> bottomSheetBehaviorDefaultSports;
     private SportRecyclerAdapter sportAdapter;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,7 +134,6 @@ public class ManageEquipmentFragment extends Fragment {
         // Listener per il bottone salva
         buttonSave.setOnClickListener(v -> {
             saveEquipment();
-            getParentFragmentManager().popBackStack();
         });
 
         textFieldDate.setOnClickListener(v -> {
@@ -263,6 +262,11 @@ public class ManageEquipmentFragment extends Fragment {
         double price = priceText.isEmpty() ? 0.0 : Double.parseDouble(priceText);  // Prezzo (se non vuoto)
         String notes = textFieldNotes.getText().toString().trim();  // Note
 
+        if (spinnerEquipment.getSelectedItemPosition() == 0 || brand.isEmpty() || model.isEmpty()) {
+            Toast.makeText(requireContext(), FILL_ALL_REQUIRED_FIELDS, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Ottieni la lista degli sport selezionati dal RecyclerView nel BottomSheet
         List<Sport> selectedDefaultSports = sportAdapter.getSelectedSports();  // Ottieni gli sport selezionati
 
@@ -315,5 +319,6 @@ public class ManageEquipmentFragment extends Fragment {
 
         // Mostra un messaggio di conferma e torna indietro
         Toast.makeText(requireContext(), EQUIPMENT_SAVE, Toast.LENGTH_SHORT).show();
+        getParentFragmentManager().popBackStack();
     }
 }

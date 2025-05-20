@@ -48,22 +48,31 @@
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_equipmentFragment"
-            app:destination="@id/equipmentFragment"/>
+            app:destination="@id/usersEquipmentFragment"/>
     </fragment>
 
     <fragment
-        android:id="@+id/equipmentFragment"
-        android:name="com.example.peaky.ui.home.profile.EquipmentFragment"
+        android:id="@+id/usersEquipmentFragment"
+        android:name="com.example.peaky.ui.home.profile.users_equipment.UsersEquipmentFragment"
         android:label="Equipment"
-        tools:layout="@layout/fragment_equipment">
+        tools:layout="@layout/fragment_users_equipment">
         <action
             android:id="@+id/action_equipmentFragment_to_manageEquipmentFragment"
             app:destination="@id/manageEquipmentFragment"/>
+        <action
+            android:id="@+id/action_equipmentFragment_to_selectedEquipmentFragment"
+            app:destination="@id/selectedEquipmentFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/manageEquipmentFragment"
-        android:name="com.example.peaky.ui.home.profile.ManageEquipmentFragment"
+        android:name="com.example.peaky.ui.home.profile.users_equipment.manage_equipment.ManageEquipmentFragment"
         android:label="Add Equipment"
         tools:layout="@layout/fragment_manage_equipment" />
+
+    <fragment
+        android:id="@+id/selectedEquipmentFragment"
+        android:name="com.example.peaky.ui.home.profile.users_equipment.selected_equipment.SelectedEquipmentFragment"
+        android:label="Selected Equipment"
+        tools:layout="@layout/fragment_selected_equipment" />
 </navigation>

@@ -7,6 +7,8 @@ public class EquipmentCategory {
     private int icon;
     private List<EquipmentType> types;
 
+    public EquipmentCategory() {}
+
     public EquipmentCategory(String name, int icon, List<EquipmentType> types) {
         this.name = name;
         this.types = types;

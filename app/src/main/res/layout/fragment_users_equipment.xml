@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.home.profile.EquipmentFragment">
+    tools:context=".ui.home.profile.users_equipment.UsersEquipmentFragment">
 
     <RelativeLayout
         android:id="@+id/header_container"
@@ -61,7 +61,8 @@
         android:id="@+id/container_clothing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,22 +75,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:textStyle="bold"
-                android:text="@string/technical_clothing"/>
+                android:text="@string/technical_clothing"
+                android:padding="4dp"/>
 
             <TextView
+                android:id="@+id/statsClothing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
-                android:text="@string/stats"/>
+                android:text="@string/stats"
+                android:padding="4dp"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_clothing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -97,7 +100,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -110,22 +115,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:textStyle="bold"
-                android:text="@string/footwear"/>
+                android:text="@string/footwear"
+                android:padding="4dp"/>
 
             <TextView
+                android:id="@+id/statsFootwear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
-                android:text="@string/stats"/>
+                android:text="@string/stats"
+                android:padding="4dp"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_footwear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -133,7 +140,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -146,22 +154,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:textStyle="bold"
-                android:text="@string/tools"/>
+                android:text="@string/tools"
+                android:padding="4dp"/>
 
             <TextView
+                android:id="@+id/statsTools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
-                android:text="@string/stats"/>
+                android:text="@string/stats"
+                android:padding="4dp"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -169,7 +179,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -182,22 +193,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:textStyle="bold"
-                android:text="@string/wearables"/>
+                android:text="@string/wearables"
+                android:padding="4dp"/>
 
             <TextView
+                android:id="@+id/statsWearables"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
-                android:text="@string/stats"/>
+                android:text="@string/stats"
+                android:padding="4dp"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_wearables"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -205,7 +218,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -218,22 +233,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:textStyle="bold"
-                android:text="@string/bikes"/>
+                android:text="@string/bikes"
+                android:padding="4dp"/>
 
             <TextView
+                android:id="@+id/statsBikes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
-                android:text="@string/stats"/>
+                android:text="@string/stats"
+                android:padding="4dp"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_bikes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            />
     </LinearLayout>
 
 </LinearLayout>

@@ -20,6 +20,7 @@ public class Constants {
     public static final String NO_EXISTING_ACCOUNT_ERROR_MESSAGE = "No existing account with this email";
     public static final String INVALID_EMAIL_OR_PASSWORD_ERROR_MESSAGE = "Invalid email or password.";
     public static final String EXISTING_ACCOUNT_ERROR_MESSAGE = "An account already exists with this email address.";
+    public static final String FILL_ALL_REQUIRED_FIELDS = "Please fill all required fields";
 
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     public static final String LOCATION_PERMISSION_REQUIRED = "Location Permission Required";

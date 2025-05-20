@@ -3,13 +3,21 @@ package com.example.peaky.source;
 import android.util.Log;
 
 import com.example.peaky.model.equipment.Equipment;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EquipmentDataSource {
 
     private final FirebaseFirestore firestore;
+
+    public interface EquipmentCallback {
+        void onSuccess(List<Equipment> equipmentList);
+        void onError(Exception e);
+    }
 
     public EquipmentDataSource(FirebaseFirestore firestore) {
         this.firestore = firestore;
@@ -22,7 +30,7 @@ public class EquipmentDataSource {
             // Se l'ID è null, Firestore genera un ID automatico
             equipmentRef = firestore.collection("users")
                     .document(userId)  // Usa l'ID dell'utente
-                    .collection("equipaggiamenti") // Sottocartella per gli equipaggiamenti
+                    .collection("equipments") // Sottocartella per gli equipaggiamenti
                     .document();  // Firestore genera un ID
             equipment.setId(equipmentRef.getId()); // Imposta l'ID generato
         } else {
@@ -46,5 +54,21 @@ public class EquipmentDataSource {
                     // Gestisci l'errore
                     Log.e("EquipmentRepository", "Error saving equipment: ", e);
                 });
+    }
+
+    public void getUserEquipment(String userId, EquipmentCallback callback) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("equipments")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Equipment> equipmentList = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        Equipment e = doc.toObject(Equipment.class);
+                        equipmentList.add(e);
+                    }
+                    callback.onSuccess(equipmentList);
+                })
+                .addOnFailureListener(callback::onError);
     }
 }
