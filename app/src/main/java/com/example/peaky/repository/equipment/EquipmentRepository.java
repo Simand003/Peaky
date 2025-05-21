@@ -41,7 +41,6 @@ public class EquipmentRepository {
             is.read(buffer);
             is.close();
 
-            // Converti i byte in stringa UTF-8
             String jsonString = new String(buffer, StandardCharsets.UTF_8);
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray categoriesArray = jsonObject.getJSONArray("categories");
@@ -90,4 +89,6 @@ public class EquipmentRepository {
     public String getCategoryForType(String typeName) {
         return typeToCategoryMap.get(typeName);
     }
+
+
 }

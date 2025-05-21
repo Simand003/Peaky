@@ -18,16 +18,19 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.peaky.R;
 import com.example.peaky.adapter.EquipmentRecyclerAdapter;
 import com.example.peaky.model.equipment.Equipment;
 import com.example.peaky.repository.equipment.EquipmentRepository;
 import com.example.peaky.repository.equipment.EquipmentRepositoryFactory;
+import com.example.peaky.repository.sport.SportRepository;
+import com.example.peaky.repository.sport.SportRepositoryFactory;
+import com.example.peaky.source.SportDataSource;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsersEquipmentFragment extends Fragment {
@@ -47,7 +50,8 @@ public class UsersEquipmentFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         EquipmentRepository equipmentRepository = EquipmentRepositoryFactory.getEquipmentRepository(requireContext());
-        viewModel = new UsersEquipmentViewModel(equipmentRepository);
+        SportRepository sportRepository = SportRepositoryFactory.getSportRepository(requireContext());
+        viewModel = new UsersEquipmentViewModel(equipmentRepository, sportRepository);
     }
 
     @Override
@@ -137,20 +141,42 @@ public class UsersEquipmentFragment extends Fragment {
             container.setVisibility(View.VISIBLE);
             recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
             recyclerView.setAdapter(new EquipmentRecyclerAdapter(list, equipment -> {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("equipment", equipment);
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-                navController.navigate(R.id.action_equipmentFragment_to_selectedEquipmentFragment, bundle);
+
+                // Carica gli sport associati *prima* di navigare
+                viewModel.getSportsWhereEquipmentIsDefault(userId, equipment.getId(), new SportDataSource.OnSportsResultListener() {
+                    @Override
+                    public void onResult(List<String> sports) {
+                        // Una volta caricati, passa tutto nel bundle
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("equipment", equipment);
+                        bundle.putStringArrayList("associatedSports", new ArrayList<>(sports)); // lista serializzabile
+
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+                        navController.navigate(R.id.action_equipmentFragment_to_selectedEquipmentFragment, bundle);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // Anche in caso di errore, fai la navigazione senza sport associati
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("equipment", equipment);
+                        bundle.putStringArrayList("associatedSports", new ArrayList<>());
+
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+                        navController.navigate(R.id.action_equipmentFragment_to_selectedEquipmentFragment, bundle);
+                    }
+                });
             }));
-
 
             // Calcola il totale del costo
             double totalCost = 0;
             for (Equipment item : list) {
                 totalCost += item.getPrice();
             }
-            statsText.setText("€"+totalCost);
+            statsText.setText("€" + totalCost);
         }
     }
+
 }

@@ -14,15 +14,28 @@ import android.widget.TextView;
 
 import com.example.peaky.R;
 import com.example.peaky.model.equipment.Equipment;
+import com.example.peaky.repository.sport.SportRepository;
+import com.example.peaky.repository.sport.SportRepositoryFactory;
 
+import java.util.List;
 import java.util.Locale;
 
 public class SelectedEquipmentFragment extends Fragment {
 
     private TextView selectedEquipment, textBrand, textModel, textPurchaseDate, textPrice,
-            textNotes, textDistance, textElevation, textUses, textPeaksReached;
+            textNotes, textDistance, textElevation, textUses, textPeaksReached, textDefaultSports;
     private Button buttonBack;
-    private LinearLayout notesContainer;
+    private LinearLayout notesContainer, defaultSportsContainer;
+
+    private SelectedEquipmentViewModel viewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        SportRepository sportRepository = SportRepositoryFactory.getSportRepository(requireContext());
+        viewModel = new SelectedEquipmentViewModel(sportRepository);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -43,8 +56,10 @@ public class SelectedEquipmentFragment extends Fragment {
         textUses = view.findViewById(R.id.uses_row).findViewById(R.id.value);
         textPeaksReached = view.findViewById(R.id.peaks_row).findViewById(R.id.value);
         textNotes = view.findViewById(R.id.text_notes_content);
+        textDefaultSports = view.findViewById(R.id.text_deafult_sports_content);
 
         notesContainer = view.findViewById(R.id.notes_container);
+        defaultSportsContainer = view.findViewById(R.id.deafult_sports_container);
 
         ((TextView) view.findViewById(R.id.brand_row).findViewById(R.id.label)).setText(R.string.brand);
         ((TextView) view.findViewById(R.id.model_row).findViewById(R.id.label)).setText(R.string.model);
@@ -63,8 +78,21 @@ public class SelectedEquipmentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Equipment equipment = (Equipment) getArguments().getSerializable("equipment");
+        List<String> associatedSports = getArguments().getStringArrayList("associatedSports");
 
         populateTextView(equipment);
+
+        if (associatedSports != null && !associatedSports.isEmpty()) {
+            defaultSportsContainer.setVisibility(View.VISIBLE);
+            StringBuilder s = new StringBuilder();
+            for (String sport : associatedSports) {
+                s.append(sport).append(", ");
+            }
+            if (s.length() > 0) s.setLength(s.length() - 2);
+            textDefaultSports.setText(s.toString());
+        } else {
+            defaultSportsContainer.setVisibility(View.GONE);
+        }
 
         buttonBack.setOnClickListener(v -> requireActivity().onBackPressed());
     }
@@ -121,6 +149,7 @@ public class SelectedEquipmentFragment extends Fragment {
             } else {
                 notesContainer.setVisibility(View.GONE);
             }
+
         }
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.home.profile.users_equipment.selected_equipment.SelectedEquipmentFragment">
 
-    <!-- Header -->
     <RelativeLayout
         android:id="@+id/header_container"
         android:layout_width="match_parent"
@@ -33,7 +33,6 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <!-- Informazioni -->
     <include layout="@layout/equipment_detail_row" android:id="@+id/brand_row" />
     <include layout="@layout/equipment_detail_row" android:id="@+id/model_row" />
     <include layout="@layout/equipment_detail_row" android:id="@+id/date_row" />
@@ -50,10 +49,10 @@
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingBottom="8dp"
+        android:visibility="gone">
 
         <TextView
-            android:id="@+id/text_title_deafult_sports"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/default_sports"
@@ -68,7 +67,8 @@
             android:text="@string/default_sports"
             android:layout_marginTop="4dp"
             android:textSize="16sp"
-            android:textColor="@color/md_theme_onSurface_mediumContrast"/>
+            android:textColor="@color/md_theme_onSurface_mediumContrast"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -99,4 +99,38 @@
             android:textColor="@color/md_theme_onSurface_mediumContrast"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        >
+
+        <Button
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:id="@+id/updateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/update_equipment"
+            app:icon="@drawable/baseline_edit_note_24"
+            app:iconGravity="textStart"
+            android:paddingVertical="12dp"
+            />
+
+        <Button
+            style="@style/Widget.Material3.Button.Icon"
+            android:id="@+id/deleteButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/delete_equipment"
+            app:icon="@drawable/baseline_delete_outline_24"
+            app:iconGravity="textStart"
+            android:paddingVertical="12dp"
+            />
+    </LinearLayout>
 </LinearLayout>

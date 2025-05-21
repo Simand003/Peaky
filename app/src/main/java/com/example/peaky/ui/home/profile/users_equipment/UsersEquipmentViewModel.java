@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.peaky.model.equipment.Equipment;
 import com.example.peaky.repository.equipment.EquipmentRepository;
+import com.example.peaky.repository.sport.SportRepository;
 import com.example.peaky.source.EquipmentDataSource;
+import com.example.peaky.source.SportDataSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,14 +20,16 @@ import java.util.Map;
 // ViewModel che segue il flusso ViewModel -> Repository -> DataSource -> Firebase
 public class UsersEquipmentViewModel extends ViewModel {
 
-    private final EquipmentRepository repository;
+    private final EquipmentRepository equipmentRepository;
+    private final SportRepository sportRepository;
 
     private final MutableLiveData<Map<String, List<Equipment>>> equipmentByType = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-    public UsersEquipmentViewModel(EquipmentRepository repository) {
-        this.repository = repository;
+    public UsersEquipmentViewModel(EquipmentRepository equipmentRepository, SportRepository sportRepository) {
+        this.equipmentRepository = equipmentRepository;
+        this.sportRepository = sportRepository;
     }
 
     public LiveData<Map<String, List<Equipment>>> getEquipmentByType() {
@@ -34,14 +38,14 @@ public class UsersEquipmentViewModel extends ViewModel {
 
     public void loadUserEquipment(String userId) {
         loading.setValue(true);
-        repository.getUserEquipment(userId, new EquipmentDataSource.EquipmentCallback() {
+        equipmentRepository.getUserEquipment(userId, new EquipmentDataSource.EquipmentCallback() {
             @Override
             public void onSuccess(List<Equipment> equipmentList) {
                 Map<String, List<Equipment>> grouped = new HashMap<>();
 
                 for (Equipment e : equipmentList) {
                     String typeName = e.getType().getName();
-                    String category = repository.getCategoryForType(typeName);
+                    String category = equipmentRepository.getCategoryForType(typeName);
                     if (category == null) {
                         Log.w("ViewModel", "Tipo sconosciuto: " + typeName);
                         continue;
@@ -57,5 +61,8 @@ public class UsersEquipmentViewModel extends ViewModel {
                 Log.e("ViewModel", "Errore nel caricamento: ", e);
             }
         });
+    }
+    public void getSportsWhereEquipmentIsDefault(String userId, String equipmentId, SportDataSource.OnSportsResultListener listener) {
+        sportRepository.getSportsWhereEquipmentIsDefault(userId, equipmentId, listener);
     }
 }

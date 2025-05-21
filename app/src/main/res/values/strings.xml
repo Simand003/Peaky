@@ -89,5 +89,7 @@
     <string name="elevation_gain_min">Elevation gain</string>
     <string name="uses">Uses</string>
     <string name="peaks_reached">Peaks reached</string>
+    <string name="delete_equipment">Delete equipment</string>
+    <string name="update_equipment">Update equipment</string>
 
 </resources>

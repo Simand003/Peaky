@@ -2,6 +2,8 @@ package com.example.peaky.repository.sport;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.peaky.R;
 import com.example.peaky.model.Sport;
 import com.example.peaky.source.SportDataSource;
@@ -60,6 +62,10 @@ public class SportRepository {
 
     public void setDefaultEquipmentForSport(String sportName, String type, String equipmentId, String userId) {
         sportDataSource.setDefaultEquipmentForSport(sportName, type, equipmentId, userId);
+    }
+
+    public void getSportsWhereEquipmentIsDefault(String userId, String equipmentId, SportDataSource.OnSportsResultListener listener) {
+        sportDataSource.getSportsWhereEquipmentIsDefault(userId, equipmentId, listener);
     }
 }
 
