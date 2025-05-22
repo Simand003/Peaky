@@ -90,5 +90,7 @@ public class EquipmentRepository {
         return typeToCategoryMap.get(typeName);
     }
 
-
+    public void deleteEquipment(String userId, String equipmentId, EquipmentDataSource.OnDeleteListener listener) {
+        equipmentDataSource.deleteEquipment(userId, equipmentId, listener);
+    }
 }

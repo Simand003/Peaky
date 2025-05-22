@@ -67,5 +67,10 @@ public class SportRepository {
     public void getSportsWhereEquipmentIsDefault(String userId, String equipmentId, SportDataSource.OnSportsResultListener listener) {
         sportDataSource.getSportsWhereEquipmentIsDefault(userId, equipmentId, listener);
     }
+
+    public void removeEquipmentFromDefaultInSports(String userId, String equipmentId, SportDataSource.OnCompleteListener listener) {
+        sportDataSource.removeEquipmentFromDefaultInSports(userId, equipmentId, listener);
+    }
+
 }
 

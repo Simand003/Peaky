@@ -1,9 +1,12 @@
 package com.example.peaky.ui.home.profile.users_equipment.selected_equipment;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +14,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.peaky.R;
 import com.example.peaky.model.equipment.Equipment;
+import com.example.peaky.repository.equipment.EquipmentRepository;
+import com.example.peaky.repository.equipment.EquipmentRepositoryFactory;
 import com.example.peaky.repository.sport.SportRepository;
 import com.example.peaky.repository.sport.SportRepositoryFactory;
+import com.example.peaky.source.EquipmentDataSource;
+import com.example.peaky.source.SportDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,7 +33,7 @@ public class SelectedEquipmentFragment extends Fragment {
 
     private TextView selectedEquipment, textBrand, textModel, textPurchaseDate, textPrice,
             textNotes, textDistance, textElevation, textUses, textPeaksReached, textDefaultSports;
-    private Button buttonBack;
+    private Button buttonBack, updateButton, deleteButton;
     private LinearLayout notesContainer, defaultSportsContainer;
 
     private SelectedEquipmentViewModel viewModel;
@@ -34,7 +43,8 @@ public class SelectedEquipmentFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         SportRepository sportRepository = SportRepositoryFactory.getSportRepository(requireContext());
-        viewModel = new SelectedEquipmentViewModel(sportRepository);
+        EquipmentRepository equipmentRepository = EquipmentRepositoryFactory.getEquipmentRepository(requireContext());
+        viewModel = new SelectedEquipmentViewModel(sportRepository, equipmentRepository);
     }
 
     @Override
@@ -70,6 +80,9 @@ public class SelectedEquipmentFragment extends Fragment {
         ((TextView) view.findViewById(R.id.uses_row).findViewById(R.id.label)).setText(R.string.uses);
         ((TextView) view.findViewById(R.id.peaks_row).findViewById(R.id.label)).setText(R.string.peaks_reached);
 
+        updateButton = view.findViewById(R.id.button_update);
+        deleteButton = view.findViewById(R.id.button_delete);
+
         return view;
     }
 
@@ -78,7 +91,7 @@ public class SelectedEquipmentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Equipment equipment = (Equipment) getArguments().getSerializable("equipment");
-        List<String> associatedSports = getArguments().getStringArrayList("associatedSports");
+        ArrayList<String> associatedSports = getArguments().getStringArrayList("associatedSports");
 
         populateTextView(equipment);
 
@@ -95,6 +108,68 @@ public class SelectedEquipmentFragment extends Fragment {
         }
 
         buttonBack.setOnClickListener(v -> requireActivity().onBackPressed());
+
+        updateButton.setOnClickListener(v -> {
+            if (equipment != null) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("equipment", equipment);
+                bundle.putStringArrayList("associatedSports", associatedSports);
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.action_selectedEquipmentFragment_to_manageEquipmentFragment, bundle);
+            }
+        });
+
+        deleteButton.setOnClickListener(v -> {
+            View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_confirm_delete_equipment, null);
+
+            AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                    .setView(dialogView)
+                    .create();
+
+            Button cancelButton = dialogView.findViewById(R.id.button_cancel);
+            Button confirmButton = dialogView.findViewById(R.id.button_confirm);
+
+            cancelButton.setOnClickListener(d -> dialog.dismiss());
+
+            confirmButton.setOnClickListener(d -> {
+                if (equipment != null) {
+                    String userId = equipment.getUserId(); // Assicurati che esista
+                    viewModel.removeEquipmentFromDefaultInSports(userId, equipment.getId(), new SportDataSource.OnCompleteListener() {
+                        @Override
+                        public void onComplete() {
+                            viewModel.deleteEquipment(userId, equipment.getId(), new EquipmentDataSource.OnDeleteListener() {
+                                @Override
+                                public void onDeleted() {
+                                    requireActivity().runOnUiThread(() -> {
+                                        Toast.makeText(requireContext(), "Equipment eliminato", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        requireActivity().onBackPressed();
+                                    });
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    requireActivity().runOnUiThread(() -> {
+                                        Toast.makeText(requireContext(), "Errore durante l'eliminazione", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    });
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            requireActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(), "Errore nella rimozione dagli sport", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            });
+                        }
+                    });
+                }
+            });
+            dialog.show();
+        });
+
     }
 
     public void populateTextView(Equipment equipment) {

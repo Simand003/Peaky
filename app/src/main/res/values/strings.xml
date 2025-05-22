@@ -91,5 +91,9 @@
     <string name="peaks_reached">Peaks reached</string>
     <string name="delete_equipment">Delete equipment</string>
     <string name="update_equipment">Update equipment</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="are_you_sure_you_want_to_delete_this_equipment">Are you sure you want to delete this equipment?</string>
+    <string name="confirm_deletion">Confirm Deletion</string>
 
 </resources>

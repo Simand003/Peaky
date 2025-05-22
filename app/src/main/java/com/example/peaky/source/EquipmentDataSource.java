@@ -19,6 +19,11 @@ public class EquipmentDataSource {
         void onError(Exception e);
     }
 
+    public interface OnDeleteListener {
+        void onDeleted();
+        void onError(Exception e);
+    }
+
     public EquipmentDataSource(FirebaseFirestore firestore) {
         this.firestore = firestore;
     }
@@ -72,5 +77,19 @@ public class EquipmentDataSource {
                 .addOnFailureListener(callback::onError);
     }
 
-
+    public void deleteEquipment(String userId, String equipmentId, OnDeleteListener listener) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("equipments")
+                .document(equipmentId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("EquipmentDataSource", "Equipment deleted successfully.");
+                    listener.onDeleted();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EquipmentDataSource", "Error deleting equipment", e);
+                    listener.onError(e);
+                });
+    }
 }

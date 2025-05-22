@@ -112,7 +112,7 @@
 
         <Button
             style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-            android:id="@+id/updateButton"
+            android:id="@+id/button_update"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/update_equipment"
@@ -123,7 +123,7 @@
 
         <Button
             style="@style/Widget.Material3.Button.Icon"
-            android:id="@+id/deleteButton"
+            android:id="@+id/button_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

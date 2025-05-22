@@ -2,9 +2,6 @@ package com.example.peaky.source;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -14,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
 
 public class SportDataSource {
 
@@ -26,6 +22,11 @@ public class SportDataSource {
 
     public interface OnSportsResultListener {
         void onResult(List<String> sports);
+        void onError(Exception e);
+    }
+
+    public interface OnCompleteListener {
+        void onComplete();
         void onError(Exception e);
     }
 
@@ -78,4 +79,64 @@ public class SportDataSource {
                 })
                 .addOnFailureListener(e -> listener.onError(e));
     }
+
+    public void removeEquipmentFromDefaultInSports(String userId, String equipmentId, OnCompleteListener listener) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("sports")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<DocumentSnapshot> docsToUpdate = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        Map<String, Object> defaultEquipmentMap = (Map<String, Object>) doc.get("defaultEquipment");
+
+                        if (defaultEquipmentMap != null && defaultEquipmentMap.containsValue(equipmentId)) {
+                            docsToUpdate.add(doc);
+                        }
+                    }
+
+                    if (docsToUpdate.isEmpty()) {
+                        listener.onComplete();
+                        return;
+                    }
+
+                    // Ora aggiorna ogni sport eliminando la chiave corrispondente
+                    for (DocumentSnapshot doc : docsToUpdate) {
+                        Map<String, Object> defaultEquipmentMap = (Map<String, Object>) doc.get("defaultEquipment");
+                        String sportId = doc.getId();
+                        DocumentReference sportRef = firestore.collection("users")
+                                .document(userId)
+                                .collection("sports")
+                                .document(sportId);
+
+                        // Trova la chiave da rimuovere
+                        String keyToRemove = null;
+                        for (Map.Entry<String, Object> entry : defaultEquipmentMap.entrySet()) {
+                            if (equipmentId.equals(entry.getValue())) {
+                                keyToRemove = entry.getKey();
+                                break;
+                            }
+                        }
+
+                        if (keyToRemove != null) {
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("defaultEquipment." + keyToRemove, com.google.firebase.firestore.FieldValue.delete());
+
+                            sportRef.update(updates)
+                                    .addOnSuccessListener(aVoid -> {
+                                        docsToUpdate.remove(doc);
+                                        if (docsToUpdate.isEmpty()) {
+                                            listener.onComplete();
+                                        }
+                                    })
+                                    .addOnFailureListener(listener::onError);
+                        }
+                    }
+
+                })
+                .addOnFailureListener(listener::onError);
+    }
+
+
 }

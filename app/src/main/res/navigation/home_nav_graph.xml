@@ -74,5 +74,9 @@
         android:id="@+id/selectedEquipmentFragment"
         android:name="com.example.peaky.ui.home.profile.users_equipment.selected_equipment.SelectedEquipmentFragment"
         android:label="Selected Equipment"
-        tools:layout="@layout/fragment_selected_equipment" />
+        tools:layout="@layout/fragment_selected_equipment" >
+        <action
+            android:id="@+id/action_selectedEquipmentFragment_to_manageEquipmentFragment"
+            app:destination="@id/manageEquipmentFragment"/>
+    </fragment>
 </navigation>

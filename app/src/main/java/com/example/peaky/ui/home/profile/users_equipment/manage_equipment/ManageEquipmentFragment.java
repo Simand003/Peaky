@@ -44,22 +44,24 @@ import com.example.peaky.model.equipment.Equipment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+
+// ... imports già presenti ...
 
 public class ManageEquipmentFragment extends Fragment {
 
     private ManageEquipmentViewModel viewModel;
+
     private Button buttonBack, buttonSave;
     private Spinner spinnerEquipmentCategory, spinnerEquipment;
-    private TextInputEditText textFieldBrand, textFieldModel, textFieldDate, textFieldPrice,textFieldNotes;
+    private TextInputEditText textFieldBrand, textFieldModel, textFieldDate, textFieldPrice, textFieldNotes;
     private TextView equipmentTextView, defaultSportsTextView;
     private RecyclerView recyclerViewSport;
     private BottomSheetBehavior<View> bottomSheetBehaviorDefaultSports;
     private SportRecyclerAdapter sportAdapter;
+
+    private Equipment equipmentToEdit = null;
+    private ArrayList<String> associatedSports = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,48 +74,51 @@ public class ManageEquipmentFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_manage_equipment, container, false);
 
-        // Inizializzazione dei bottoni
+        // Inizializzazione UI
         buttonBack = view.findViewById(R.id.button_back);
         buttonSave = view.findViewById(R.id.button_save);
-
-        // Inizializzazione degli spinner
         spinnerEquipmentCategory = view.findViewById(R.id.spinner_equipment_category);
         spinnerEquipment = view.findViewById(R.id.spinner_equipment);
+        textFieldBrand = view.findViewById(R.id.textField_brand);
+        textFieldModel = view.findViewById(R.id.textField_model);
+        textFieldDate = view.findViewById(R.id.select_data);
+        textFieldPrice = view.findViewById(R.id.textField_price);
+        textFieldNotes = view.findViewById(R.id.textField_notes);
+        equipmentTextView = view.findViewById(R.id.textView_equipment);
+        defaultSportsTextView = view.findViewById(R.id.button_default_sport);
+        recyclerViewSport = view.findViewById(R.id.recycler_view_sports);
+        bottomSheetBehaviorDefaultSports = BottomSheetBehavior.from(view.findViewById(R.id.bottomSheet_default_sports));
+        bottomSheetBehaviorDefaultSports.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        // Imposta inizialmente un solo item fittizio nello spinnerEquipment
         ArrayList<String> initialTypes = new ArrayList<>();
         initialTypes.add(SELECT_AN_EQUIPMENT);
         ArrayAdapter<String> initialAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, initialTypes);
         initialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEquipment.setAdapter(initialAdapter);
 
-        // Initiaziling the edit text
-        textFieldBrand = view.findViewById(R.id.textField_brand);
-        textFieldModel = view.findViewById(R.id.textField_model);
-        textFieldDate = view.findViewById(R.id.select_data);
-        textFieldPrice = view.findViewById(R.id.textField_price);
-        textFieldNotes = view.findViewById(R.id.textField_notes);
+        if (getArguments() != null) {
+            associatedSports = getArguments().getStringArrayList("associatedSports");
+            if (getArguments().containsKey("equipment")) {
+                equipmentToEdit = (Equipment) getArguments().getSerializable("equipment");
+            }
+        }
 
-        equipmentTextView = view.findViewById(R.id.textView_equipment);
-        defaultSportsTextView = view.findViewById(R.id.button_default_sport);
-
-        //Initializing Recycler View
-        recyclerViewSport = view.findViewById(R.id.recycler_view_sports);
+        // Sport observer
         viewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
             if (sports != null && !sports.isEmpty()) {
                 sportAdapter = new SportRecyclerAdapter(requireContext(), sports);
                 recyclerViewSport.setLayoutManager(new LinearLayoutManager(requireContext()));
                 recyclerViewSport.setAdapter(sportAdapter);
+
+                if (equipmentToEdit != null && associatedSports != null) {
+                    sportAdapter.setSelectedSportsByName(associatedSports);
+                    updateDefaultSportsTextView();
+                }
             }
         });
-
-        //Initializing bottom sheet
-        bottomSheetBehaviorDefaultSports = BottomSheetBehavior.from(view.findViewById(R.id.bottomSheet_default_sports));
-        bottomSheetBehaviorDefaultSports.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         viewModel.getCategories().observe(requireActivity(), this::populateEquipmentCategorySpinner);
         viewModel.getTypes().observe(requireActivity(), this::populateEquipmentTypeSpinner);
@@ -125,32 +130,19 @@ public class ManageEquipmentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Listener per il bottone indietro
-        buttonBack.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-            navController.popBackStack();
-        });
+        if (equipmentToEdit != null) {
+            loadEquipmentData(equipmentToEdit);
+        }
 
-        // Listener per il bottone salva
-        buttonSave.setOnClickListener(v -> {
-            saveEquipment();
-        });
+        buttonBack.setOnClickListener(v -> Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).popBackStack());
+        buttonSave.setOnClickListener(v -> saveEquipment());
 
         textFieldDate.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    getContext(),
-                    (view1, selectedYear, selectedMonth, selectedDay) -> {
-                        // Formatta la data nel formato gg/mm/aaaa
-                        String selectedDate = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
-                        textFieldDate.setText(selectedDate);
-                    },
-                    year, month, day
-            );
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view1, year, month, dayOfMonth) -> {
+                String selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                textFieldDate.setText(selectedDate);
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.show();
         });
 
@@ -161,42 +153,32 @@ public class ManageEquipmentFragment extends Fragment {
         });
 
         bottomSheetBehaviorDefaultSports.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
                     viewModel.resetButtonPosition();
-
-                    if (sportAdapter != null) {
-                        List<Sport> selectedSports = sportAdapter.getSelectedSports();
-
-                        if (!selectedSports.isEmpty()) {
-                            String joinedNames = "";
-                            if (!selectedSports.isEmpty()) {
-                                List<String> names = new ArrayList<>();
-                                for (Sport sport : selectedSports) {
-                                    names.add(sport.getName());
-                                }
-                                joinedNames = TextUtils.join(", ", names);
-                                defaultSportsTextView.setText(joinedNames);
-                            } else {
-                                defaultSportsTextView.setText("Nessuno sport selezionato");
-                            }
-                        } else {
-                            defaultSportsTextView.setText(R.string.no_sport_selected);
-                        }
-                    }
+                    updateDefaultSportsTextView();
                 } else {
                     viewModel.adjustButtonPosition(bottomSheet);
                 }
             }
 
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 viewModel.adjustButtonPosition(bottomSheet);
             }
         });
+    }
 
+    private void updateDefaultSportsTextView() {
+        if (sportAdapter != null) {
+            List<Sport> selected = sportAdapter.getSelectedSports();
+            if (!selected.isEmpty()) {
+                List<String> names = new ArrayList<>();
+                for (Sport sport : selected) names.add(sport.getName());
+                defaultSportsTextView.setText(TextUtils.join(", ", names));
+            } else {
+                defaultSportsTextView.setText(R.string.no_sport_selected);
+            }
+        }
     }
 
     private void populateEquipmentCategorySpinner(ArrayList<String> categories) {
@@ -206,12 +188,9 @@ public class ManageEquipmentFragment extends Fragment {
         spinnerEquipmentCategory.setAdapter(adapter);
 
         spinnerEquipmentCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) { // Se è stata selezionata una categoria valida
-                    String selectedCategory = categories.get(position);
-                    viewModel.onCategorySelected(selectedCategory);
-
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > 0) {
+                    viewModel.onCategorySelected(categories.get(position));
                     spinnerEquipment.setAlpha(1.0f);
                     spinnerEquipment.setEnabled(true);
                     equipmentTextView.setAlpha(1.0f);
@@ -223,9 +202,7 @@ public class ManageEquipmentFragment extends Fragment {
                 }
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -235,90 +212,62 @@ public class ManageEquipmentFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEquipment.setAdapter(adapter);
 
-        spinnerEquipment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) {
-                    String selectedType = types.get(position);
-                    // Azione da eseguire quando viene selezionato un tipo valido (opzionale)
-                } else {
-                    // L'utente ha selezionato "Seleziona un tipo...", nessuna azione (opzionale)
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        if (equipmentToEdit != null) {
+            int pos = types.indexOf(equipmentToEdit.getType().getName());
+            if (pos >= 0) spinnerEquipment.setSelection(pos + 1);
+        }
     }
 
     private void saveEquipment() {
-        // Raccogli i dati dai campi di input
-        String equipmentName = spinnerEquipment.getSelectedItem().toString();  // Nome del tipo di equipaggiamento
-        String brand = textFieldBrand.getText().toString().trim();  // Marca
-        String model = textFieldModel.getText().toString().trim();  // Modello
-        String purchaseDateString = textFieldDate.getText().toString();  // Data di acquisto (stringa)
-        String priceText = textFieldPrice.getText().toString().trim();  // Prezzo
-        double price = priceText.isEmpty() ? 0.0 : Double.parseDouble(priceText);  // Prezzo (se non vuoto)
-        String notes = textFieldNotes.getText().toString().trim();  // Note
+        String equipmentName = spinnerEquipment.getSelectedItem().toString();
+        String brand = textFieldBrand.getText().toString().trim();
+        String model = textFieldModel.getText().toString().trim();
+        String purchaseDateString = textFieldDate.getText().toString();
+        String priceText = textFieldPrice.getText().toString().trim();
+        double price = priceText.isEmpty() ? 0.0 : Double.parseDouble(priceText);
+        String notes = textFieldNotes.getText().toString().trim();
 
         if (spinnerEquipment.getSelectedItemPosition() == 0 || brand.isEmpty() || model.isEmpty()) {
             Toast.makeText(requireContext(), FILL_ALL_REQUIRED_FIELDS, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Ottieni la lista degli sport selezionati dal RecyclerView nel BottomSheet
-        List<Sport> selectedDefaultSports = sportAdapter.getSelectedSports();  // Ottieni gli sport selezionati
-
-        // Ottieni l'ID dell'utente corrente da Firebase
+        List<Sport> selectedSports = sportAdapter.getSelectedSports();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser.getUid();
 
-        // Gestione della data di acquisto
         Date purchaseDate = null;
         if (!purchaseDateString.isEmpty()) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             try {
-                purchaseDate = sdf.parse(purchaseDateString);  // Converte la stringa della data in un oggetto Date
+                purchaseDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(purchaseDateString);
             } catch (ParseException e) {
-                e.printStackTrace();
                 Toast.makeText(requireContext(), "Formato data non valido", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
-        // Crea l'oggetto EquipmentType (il tipo di equipaggiamento selezionato)
         EquipmentType equipmentType = new EquipmentType(equipmentName);
-
-        // Creazione dell'oggetto Equipment con i dati raccolti
         Equipment equipment = new Equipment(
-                null,  // L'ID sarà generato automaticamente dal database (Firestore)
-                userId,  // ID dell'utente corrente
-                equipmentType,  // Usa il nome come String, non l'oggetto EquipmentType
-                brand,  // Marca
-                model,  // Modello
-                purchaseDate,  // Data di acquisto
-                price,  // Prezzo
-                notes,  // Note
-                0.0,  // Distanza (inizialmente 0.0)
-                0.0,  // Elevazione (inizialmente 0.0)
-                0,  // Usi (inizialmente 0)
-                0   // Picchi raggiunti (inizialmente 0)
+                null, userId, equipmentType, brand, model, purchaseDate, price,
+                notes, 0.0, 0.0, 0, 0
         );
 
-        // Salva l'equipaggiamento tramite il ViewModel
         viewModel.addEquipment(userId, equipment);
 
-        // Se l'utente ha selezionato degli sport da associare all'equipaggiamento, aggiorna gli sport
-        if (!selectedDefaultSports.isEmpty()) {
-            for (Sport sport : selectedDefaultSports) {
-                // Usa getName() per ottenere il nome del tipo come stringa
-                viewModel.setDefaultEquipmentForSport(sport.getName(), equipment.getType().getName(), equipment);
-            }
+        for (Sport sport : selectedSports) {
+            viewModel.setDefaultEquipmentForSport(sport.getName(), equipment.getType().getName(), equipment);
         }
 
-        // Mostra un messaggio di conferma e torna indietro
         Toast.makeText(requireContext(), EQUIPMENT_SAVE, Toast.LENGTH_SHORT).show();
         getParentFragmentManager().popBackStack();
     }
+
+    private void loadEquipmentData(Equipment equipment) {
+        textFieldBrand.setText(equipment.getBrand());
+        textFieldModel.setText(equipment.getModel());
+        textFieldDate.setText(equipment.getFormattedPurchaseDate());
+        textFieldPrice.setText(String.valueOf(equipment.getPrice()));
+        textFieldNotes.setText(equipment.getNotes());
+    }
 }
+

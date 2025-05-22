@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peaky.R;
@@ -17,71 +18,84 @@ import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
 
-public class SportRecyclerAdapter extends RecyclerView.Adapter<SportRecyclerAdapter.ViewHolder> {
+public class SportRecyclerAdapter extends RecyclerView.Adapter<SportRecyclerAdapter.SportViewHolder> {
 
-    private Context context;
-    private List<Sport> sportList;
-    private Set<Integer> selectedPositions = new HashSet<>(); // Set per tracciare tutte le posizioni selezionate
+    private final Context context;
+    private final List<Sport> sports;
+    private final Set<String> selectedSportNames; // Usa il nome sport come id
 
-    public SportRecyclerAdapter(Context context, List<Sport> sportList) {
+    public SportRecyclerAdapter(Context context, List<Sport> sports) {
         this.context = context;
-        this.sportList = sportList;
+        this.sports = new ArrayList<>(sports);
+        this.selectedSportNames = new HashSet<>();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView iconSport, checkIcon;
-        TextView name;
-
-        public ViewHolder(View view) {
-            super(view);
-            iconSport = view.findViewById(R.id.icon_sport);
-            checkIcon = view.findViewById(R.id.image_view_check);
-            name = view.findViewById(R.id.text);
-        }
-    }
-
+    @NonNull
     @Override
-    public SportRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SportViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.card_default_sport, parent, false);
-        return new ViewHolder(view);
+        return new SportViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(SportRecyclerAdapter.ViewHolder holder, int position) {
-        Sport sport = sportList.get(position);
-        holder.name.setText(sport.getName());
-        holder.iconSport.setImageResource(sport.getIcon());
+    public void onBindViewHolder(@NonNull SportViewHolder holder, int position) {
+        Sport sport = sports.get(position);
+        holder.textView.setText(sport.getName());
 
-        // Imposta l'icona di check in base alla selezione
-        if (selectedPositions.contains(position)) {
-            holder.checkIcon.setImageResource(R.drawable.baseline_radio_button_checked_24); // Icona selezionata
-        } else {
-            holder.checkIcon.setImageResource(R.drawable.baseline_radio_button_unchecked_24); // Icona non selezionata
-        }
+        boolean isSelected = selectedSportNames.contains(sport.getName());
+        holder.checkImageView.setImageResource(isSelected
+                ? R.drawable.baseline_radio_button_checked_24
+                : R.drawable.baseline_radio_button_unchecked_24);
 
-        // Gestisci il clic sul singolo elemento
         holder.itemView.setOnClickListener(v -> {
-            // Cambia lo stato di selezione: se selezionato, deseleziona, se non selezionato, seleziona
-            if (selectedPositions.contains(position)) {
-                selectedPositions.remove(position); // Deseleziona
+            if (isSelected) {
+                selectedSportNames.remove(sport.getName());
             } else {
-                selectedPositions.add(position); // Seleziona
+                selectedSportNames.add(sport.getName());
             }
-            // Notifica che il dataset è cambiato per aggiornare la view
             notifyItemChanged(position);
         });
     }
 
     @Override
     public int getItemCount() {
-        return sportList.size();
+        return sports.size();
     }
 
     public List<Sport> getSelectedSports() {
-        List<Sport> selectedSports = new ArrayList<>();
-        for (Integer position : selectedPositions) {
-            selectedSports.add(sportList.get(position));
+        List<Sport> selected = new ArrayList<>();
+        for (Sport sport : sports) {
+            if (selectedSportNames.contains(sport.getName())) {
+                selected.add(sport);
+            }
         }
-        return selectedSports;
+        return selected;
+    }
+
+    public void updateSports(List<Sport> newSports) {
+        sports.clear();
+        sports.addAll(newSports);
+        notifyDataSetChanged();
+    }
+
+    public void setSelectedSportsByName(List<String> sportNames) {
+        selectedSportNames.clear();
+        if (sportNames != null) {
+            selectedSportNames.addAll(sportNames);
+        }
+        notifyDataSetChanged();
+    }
+
+    static class SportViewHolder extends RecyclerView.ViewHolder {
+        ImageView iconImageView, checkImageView;
+        TextView textView;
+
+        public SportViewHolder(@NonNull View itemView) {
+            super(itemView);
+            iconImageView = itemView.findViewById(R.id.icon_sport);
+            checkImageView = itemView.findViewById(R.id.image_view_check);
+            textView = itemView.findViewById(R.id.text);
+        }
     }
 }
+
