@@ -46,8 +46,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-// ... imports già presenti ...
-
 public class ManageEquipmentFragment extends Fragment {
 
     private ManageEquipmentViewModel viewModel;
@@ -103,6 +101,7 @@ public class ManageEquipmentFragment extends Fragment {
             associatedSports = getArguments().getStringArrayList("associatedSports");
             if (getArguments().containsKey("equipment")) {
                 equipmentToEdit = (Equipment) getArguments().getSerializable("equipment");
+                viewModel.setEquipmentToEdit(equipmentToEdit);
             }
         }
 
@@ -247,18 +246,32 @@ public class ManageEquipmentFragment extends Fragment {
         }
 
         EquipmentType equipmentType = new EquipmentType(equipmentName);
-        Equipment equipment = new Equipment(
-                null, userId, equipmentType, brand, model, purchaseDate, price,
-                notes, 0.0, 0.0, 0, 0
-        );
+        Equipment equipment;
 
-        viewModel.addEquipment(userId, equipment);
+        if (viewModel.getEquipmentToEdit() != null) {
+            // Modifica
+            equipment = viewModel.getEquipmentToEdit();
+            equipment.setType(equipmentType);
+            equipment.setBrand(brand);
+            equipment.setModel(model);
+            equipment.setPurchase_date(purchaseDate);
+            equipment.setPrice(price);
+            equipment.setNotes(notes);
+
+            viewModel.updateEquipment(userId, equipment);
+        } else {
+            // Creazione
+            equipment = new Equipment(
+                    null, userId, equipmentType, brand, model, purchaseDate, price,
+                    notes, 0.0, 0.0, 0, 0
+            );
+            viewModel.addEquipment(userId, equipment);
+        }
 
         for (Sport sport : selectedSports) {
             viewModel.setDefaultEquipmentForSport(sport.getName(), equipment.getType().getName(), equipment);
         }
 
-        Toast.makeText(requireContext(), EQUIPMENT_SAVE, Toast.LENGTH_SHORT).show();
         getParentFragmentManager().popBackStack();
     }
 

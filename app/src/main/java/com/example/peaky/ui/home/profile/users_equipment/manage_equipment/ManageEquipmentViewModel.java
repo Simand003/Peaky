@@ -23,6 +23,8 @@ public class ManageEquipmentViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<String>> equipmentTypesLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> buttonMarginBottom = new MutableLiveData<>(16);
 
+    private Equipment equipmentToEdit;
+
     public ManageEquipmentViewModel(EquipmentRepository repository, SportRepository sportRepository) {
         this.equipmentRepository = repository;
         this.sportRepository = sportRepository;
@@ -74,5 +76,17 @@ public class ManageEquipmentViewModel extends ViewModel {
 
     public void setDefaultEquipmentForSport(String sportName, String type, Equipment equipment) {
         sportRepository.setDefaultEquipmentForSport(sportName, type, equipment.getId(), equipment.getUserId());
+    }
+
+    public void setEquipmentToEdit(Equipment equipment) {
+        this.equipmentToEdit = equipment;
+    }
+
+    public Equipment getEquipmentToEdit() {
+        return equipmentToEdit;
+    }
+
+    public void updateEquipment(String userId, Equipment updatedEquipment) {
+        equipmentRepository.updateEquipment(userId, updatedEquipment);
     }
 }

@@ -75,13 +75,6 @@ public class UsersEquipmentFragment extends Fragment {
         containerWearables = view.findViewById(R.id.container_wearables);
         containerBikes = view.findViewById(R.id.container_bikes);
 
-        // Stats TextViews
-        statsClothing = containerClothing.findViewById(R.id.statsClothing);
-        statsFootwear = containerFootwear.findViewById(R.id.statsFootwear);
-        statsTools = containerTools.findViewById(R.id.statsTools);
-        statsWearables = containerWearables.findViewById(R.id.statsWearables);
-        statsBikes = containerBikes.findViewById(R.id.statsBikes);
-
         // RecyclerViews
         recyclerViewClothing = view.findViewById(R.id.recyclerView_clothing);
         recyclerViewFootwear = view.findViewById(R.id.recyclerView_footwear);
@@ -101,11 +94,11 @@ public class UsersEquipmentFragment extends Fragment {
 
         // Observe equipment data
         viewModel.getEquipmentByType().observe(getViewLifecycleOwner(), map -> {
-            setupRecycler(map.get("Technical Clothing"), recyclerViewClothing, containerClothing, statsClothing);
-            setupRecycler(map.get("Footwear"), recyclerViewFootwear, containerFootwear, statsFootwear);
-            setupRecycler(map.get("Equipment"), recyclerViewTools, containerTools, statsTools);
-            setupRecycler(map.get("Wearables"), recyclerViewWearables, containerWearables, statsWearables);
-            setupRecycler(map.get("Bikes"), recyclerViewBikes, containerBikes, statsBikes);
+            setupRecycler(map.get("Technical Clothing"), recyclerViewClothing, containerClothing);
+            setupRecycler(map.get("Footwear"), recyclerViewFootwear, containerFootwear);
+            setupRecycler(map.get("Equipment"), recyclerViewTools, containerTools);
+            setupRecycler(map.get("Wearables"), recyclerViewWearables, containerWearables);
+            setupRecycler(map.get("Bikes"), recyclerViewBikes, containerBikes);
         });
 
         buttonBack.setOnClickListener(v -> {
@@ -134,7 +127,7 @@ public class UsersEquipmentFragment extends Fragment {
                 });
     }
 
-    private void setupRecycler(List<Equipment> list, RecyclerView recyclerView, View container, TextView statsText) {
+    private void setupRecycler(List<Equipment> list, RecyclerView recyclerView, View container) {
         if (list == null || list.isEmpty()) {
             container.setVisibility(View.GONE);
         } else {
@@ -169,13 +162,6 @@ public class UsersEquipmentFragment extends Fragment {
                     }
                 });
             }));
-
-            // Calcola il totale del costo
-            double totalCost = 0;
-            for (Equipment item : list) {
-                totalCost += item.getPrice();
-            }
-            statsText.setText("€" + totalCost);
         }
     }
 

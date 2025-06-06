@@ -93,4 +93,8 @@ public class EquipmentRepository {
     public void deleteEquipment(String userId, String equipmentId, EquipmentDataSource.OnDeleteListener listener) {
         equipmentDataSource.deleteEquipment(userId, equipmentId, listener);
     }
+
+    public void updateEquipment(String userId, Equipment updatedEquipment) {
+        equipmentDataSource.updateEquipment(userId, updatedEquipment);
+    }
 }

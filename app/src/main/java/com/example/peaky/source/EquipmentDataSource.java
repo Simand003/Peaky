@@ -92,4 +92,18 @@ public class EquipmentDataSource {
                     listener.onError(e);
                 });
     }
+
+    public void updateEquipment(String userId, Equipment equipment) {
+        firestore.collection("users")
+                .document(userId)
+                .collection("equipments")
+                .document(equipment.getId()) // usa document, non child
+                .set(equipment)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("EquipmentDataSource", "Equipment updated successfully.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EquipmentDataSource", "Error updating equipment: ", e);
+                });
+    }
 }
