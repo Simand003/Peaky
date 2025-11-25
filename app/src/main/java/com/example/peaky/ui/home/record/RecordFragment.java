@@ -33,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -40,6 +41,7 @@ import android.widget.TextView;
 
 import com.example.peaky.R;
 import com.example.peaky.adapter.SportSpinnerAdapter;
+import com.example.peaky.model.Activity;
 import com.example.peaky.repository.OSMRepository;
 import com.example.peaky.repository.sport.SportRepository;
 import com.example.peaky.source.SportDataSource;
@@ -74,7 +76,7 @@ public class RecordFragment extends Fragment {
     private Spinner spinner;
 
     private LinearLayout linearLayoutGPSLocator, buttonsContainer;
-    private TextView textGPSLocator, textAltitude;
+    private TextView textGPSLocator, textAltitude, textViewChronometer;
     private static final long SEARCH_TIMEOUT = 10000;
     private long lastLocationUpdate = 0;
     private FusedLocationProviderClient locationClient;
@@ -82,7 +84,8 @@ public class RecordFragment extends Fragment {
     private boolean isSearching = false;
 
     private Button buttonBack;
-    private ImageButton buttonGoToPosition, buttonRecordAction, buttonRecordEnd, buttonRecordedData, buttonReporterTools;
+    private ImageButton buttonGoToPosition, buttonRecordAction, buttonRecordEnd, buttonRecordedData,
+            buttonReporterTools;
     private View bottomSheetData, bottomSheetReporter;
     private BottomSheetBehavior<View> bottomSheetDataBehavior, bottomSheetReporterBehavior;
 
@@ -95,6 +98,7 @@ public class RecordFragment extends Fragment {
     private boolean isFirstLocationUpdate = true;
     private boolean isCentralizing = false;
 
+    private Chronometer chronometer;
 
     private SportRepository sportRepository;
     private RecordViewModel recordViewModel;
@@ -127,7 +131,8 @@ public class RecordFragment extends Fragment {
         }
 
         //Initializing the text view
-        textAltitude = view.findViewById(R.id.textAltitude);
+        //textAltitude = view.findViewById(R.id.textAltitude);
+        textViewChronometer = view.findViewById(R.id.textView_chronometer);
 
         //Initializing the buttons
         buttonsContainer = view.findViewById(R.id.buttons_container);
@@ -207,6 +212,8 @@ public class RecordFragment extends Fragment {
             if (!isRecording) {
                 buttonRecordAction.setImageResource(R.drawable.record_pause);
                 buttonRecordEnd.setVisibility(View.GONE);
+
+                //current_activity = new Activity();
                 isRecording = true;
             } else {
                 buttonRecordAction.setImageResource(R.drawable.record_continue);
@@ -226,14 +233,12 @@ public class RecordFragment extends Fragment {
             buttonsContainer.setLayoutParams(params);
         });
 
-        buttonRecordedData.setOnClickListener(v -> {
-            bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        });
-
-        bottomSheetDataBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        // Creo un callback riutilizzabile
+        BottomSheetBehavior.BottomSheetCallback sharedCallback = new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED
+                        || newState == BottomSheetBehavior.STATE_HIDDEN) {
                     recordViewModel.resetButtonPosition();
                 } else {
                     recordViewModel.adjustButtonPosition(bottomSheet);
@@ -244,12 +249,28 @@ public class RecordFragment extends Fragment {
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 recordViewModel.adjustButtonPosition(bottomSheet);
             }
+        };
+
+        //TODO: capire perché se si passa due volte di fila da Data a Reporter i bottoni cadono
+        // sotto al bottomsheet
+
+        // Aggiungo il callback una volta sola
+        bottomSheetDataBehavior.addBottomSheetCallback(sharedCallback);
+        bottomSheetReporterBehavior.addBottomSheetCallback(sharedCallback);
+
+        buttonRecordedData.setOnClickListener(v -> {
+            if (bottomSheetReporterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+                bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+            bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
 
         buttonReporterTools.setOnClickListener(v -> {
+            if (bottomSheetDataBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+                bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
             bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
-
     }
 
     private void checkLocationPermission() {
@@ -440,8 +461,8 @@ public class RecordFragment extends Fragment {
                 cambiaStato(1);
                 lastLocationUpdate = System.currentTimeMillis();
 
-                double altitude = location.getAltitude();
-                textAltitude.setText(String.format(Locale.getDefault(), "%.2f m", altitude));
+                //double altitude = location.getAltitude();
+                //textAltitude.setText(String.format(Locale.getDefault(), "%.2f m", altitude));
 
                 GeoPoint userLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
 

@@ -4,7 +4,9 @@ import static com.example.peaky.ui.home.record.RecordFragment.FOUND;
 import static com.example.peaky.ui.home.record.RecordFragment.NOT_FOUND;
 import static com.example.peaky.ui.home.record.RecordFragment.SEARCHING;
 
+import android.os.SystemClock;
 import android.view.View;
+import android.widget.Chronometer;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -59,6 +61,7 @@ public class RecordViewModel extends ViewModel {
             default: return SEARCHING;
         }
     }
+
     public void adjustButtonPosition(View bottomSheet) {
         int marginBottom = 16; // Margine di default
 
@@ -73,6 +76,16 @@ public class RecordViewModel extends ViewModel {
         buttonMarginBottom.setValue(16);
     }
 
+    public void updateRecord(boolean isRecording, Chronometer chronometer) {
+        if (!isRecording) {
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+            isRecording = true;
+        } else {
+            chronometer.start();
+            isRecording = false;
+        }
+    }
 }
 
 

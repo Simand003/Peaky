@@ -26,7 +26,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         //Initializing the buttons
-        buttonEquipment = view.findViewById(R.id.button_equipment);
+        // buttonEquipment = view.findViewById(R.id.button_equipment);
 
         return view;
     }
@@ -34,10 +34,13 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+/*
         buttonEquipment.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_profileFragment_to_equipmentFragment);
         });
+        +
+
+ */
     }
 }

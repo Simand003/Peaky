@@ -95,5 +95,9 @@
     <string name="cancel">Cancel</string>
     <string name="are_you_sure_you_want_to_delete_this_equipment">Are you sure you want to delete this equipment?</string>
     <string name="confirm_deletion">Confirm Deletion</string>
+    <string name="delete_activity">Delete activity</string>
+    <string name="description">Description</string>
+    <string name="add_peak">Add peak</string>
+    <string name="select_sport">Select sport</string>
 
 </resources>

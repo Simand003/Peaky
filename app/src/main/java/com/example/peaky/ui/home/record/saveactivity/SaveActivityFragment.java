@@ -14,16 +14,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.peaky.R;
 import com.example.peaky.ui.home.HomeFragment;
 import com.example.peaky.ui.home.record.RecordFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class SaveActivityFragment extends Fragment {
 
-    private Button buttonBack, buttonSave;
+    private Button buttonBack, buttonSave, buttonAddPeak;
     private BottomNavigationView bottomNavigationView;
+
+    private TextInputEditText textPeaks, textSport;
+
+    private View bottomSheetPeaks, bottomSheetSports;
+    private BottomSheetBehavior<View> bottomSheetPeaksBehavior, bottomSheetSportsBehavior;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,6 +45,18 @@ public class SaveActivityFragment extends Fragment {
 
         buttonBack = view.findViewById(R.id.button_back);
         buttonSave = view.findViewById(R.id.button_save);
+        buttonAddPeak = view.findViewById(R.id.button_add_peak);
+
+        textPeaks = view.findViewById(R.id.textField_peaks);
+        textSport = view.findViewById(R.id.textField_sport);
+
+        bottomSheetPeaks = view.findViewById(R.id.bottomSheet_peaks);
+        bottomSheetPeaksBehavior = BottomSheetBehavior.from(bottomSheetPeaks);
+        bottomSheetPeaksBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        bottomSheetSports = view.findViewById(R.id.bottomSheet_sport);
+        bottomSheetSportsBehavior = BottomSheetBehavior.from(bottomSheetSports);
+        bottomSheetSportsBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         return view;
     }
@@ -74,7 +94,21 @@ public class SaveActivityFragment extends Fragment {
                         navController.popBackStack();
                     }
                 });
+
+
+
+        textPeaks.setOnClickListener(v -> {
+            if (bottomSheetSportsBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+                bottomSheetSportsBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+            bottomSheetPeaksBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
+
+        textSport.setOnClickListener(v -> {
+            if (bottomSheetPeaksBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+                bottomSheetPeaksBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+            bottomSheetSportsBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
     }
-
-
 }
