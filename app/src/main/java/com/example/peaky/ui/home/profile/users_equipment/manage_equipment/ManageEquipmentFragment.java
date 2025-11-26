@@ -1,3 +1,5 @@
+/*
+
 package com.example.peaky.ui.home.profile.users_equipment.manage_equipment;
 
 import static com.example.peaky.util.Constants.EQUIPMENT_SAVE;
@@ -104,7 +106,7 @@ public class ManageEquipmentFragment extends Fragment {
                 viewModel.setEquipmentToEdit(equipmentToEdit);
             }
         }
-
+/*
         // Sport observer
         viewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
             if (sports != null && !sports.isEmpty()) {
@@ -124,6 +126,7 @@ public class ManageEquipmentFragment extends Fragment {
 
         return view;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -205,6 +208,8 @@ public class ManageEquipmentFragment extends Fragment {
         });
     }
 
+
+
     private void populateEquipmentTypeSpinner(ArrayList<String> types) {
         types.add(0, SELECT_AN_EQUIPMENT);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, types);
@@ -284,3 +289,5 @@ public class ManageEquipmentFragment extends Fragment {
     }
 }
 
+
+ */

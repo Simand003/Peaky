@@ -62,14 +62,14 @@ public class RecordViewModel extends ViewModel {
         }
     }
 
+    // 👉 FIX: usa posizione reale del bottomsheet, non la height
     public void adjustButtonPosition(View bottomSheet) {
-        int marginBottom = 16; // Margine di default
+        View parent = (View) bottomSheet.getParent();
 
-        if (bottomSheet.getHeight() > 0) {
-            marginBottom += bottomSheet.getHeight();
-        }
+        int offset = parent.getHeight() - bottomSheet.getTop();
+        if (offset < 0) offset = 0;
 
-        buttonMarginBottom.setValue(marginBottom);
+        buttonMarginBottom.setValue(offset + 16);
     }
 
     public void resetButtonPosition() {

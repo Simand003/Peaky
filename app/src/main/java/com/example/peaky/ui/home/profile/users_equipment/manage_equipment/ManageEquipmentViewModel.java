@@ -1,3 +1,4 @@
+/*
 package com.example.peaky.ui.home.profile.users_equipment.manage_equipment;
 
 import android.view.View;
@@ -90,3 +91,6 @@ public class ManageEquipmentViewModel extends ViewModel {
         equipmentRepository.updateEquipment(userId, updatedEquipment);
     }
 }
+
+
+ */

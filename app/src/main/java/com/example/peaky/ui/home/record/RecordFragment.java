@@ -73,7 +73,7 @@ public class RecordFragment extends Fragment {
     public static final String NOT_FOUND = "Not found";
     private BottomNavigationView bottomNavigationView;
 
-    private Spinner spinner;
+    // ELIMINARE? private Spinner spinner;
 
     private LinearLayout linearLayoutGPSLocator, buttonsContainer;
     private TextView textGPSLocator, textAltitude, textViewChronometer;
@@ -103,6 +103,8 @@ public class RecordFragment extends Fragment {
     private SportRepository sportRepository;
     private RecordViewModel recordViewModel;
     private OSMRepository osmRepository;
+
+    private boolean callbacksAdded = false;
 
     public RecordFragment() {
     }
@@ -159,7 +161,7 @@ public class RecordFragment extends Fragment {
         bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        spinner = view.findViewById(R.id.spinner_sports);
+        // ELIMINARE? spinner = view.findViewById(R.id.spinner_sports);
 
         mapView = view.findViewById(R.id.mapView);
 
@@ -171,13 +173,14 @@ public class RecordFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+    /* ELIMINARE?
         recordViewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
             if (sports != null && !sports.isEmpty()) {
                 SportSpinnerAdapter adapter = new SportSpinnerAdapter(requireContext(), sports);
                 spinner.setAdapter(adapter);
             }
         });
+        */
 
         mapView.addMapListener(new MapListener() {
             @Override
@@ -234,29 +237,27 @@ public class RecordFragment extends Fragment {
         });
 
         // Creo un callback riutilizzabile
-        BottomSheetBehavior.BottomSheetCallback sharedCallback = new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED
-                        || newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    recordViewModel.resetButtonPosition();
-                } else {
+        if (!callbacksAdded) {
+            BottomSheetBehavior.BottomSheetCallback sharedCallback = new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    if (newState == BottomSheetBehavior.STATE_COLLAPSED ||
+                            newState == BottomSheetBehavior.STATE_HIDDEN) {
+                        recordViewModel.resetButtonPosition();
+                    } else {
+                        recordViewModel.adjustButtonPosition(bottomSheet);
+                    }
+                }
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                     recordViewModel.adjustButtonPosition(bottomSheet);
                 }
-            }
+            };
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                recordViewModel.adjustButtonPosition(bottomSheet);
-            }
-        };
-
-        //TODO: capire perché se si passa due volte di fila da Data a Reporter i bottoni cadono
-        // sotto al bottomsheet
-
-        // Aggiungo il callback una volta sola
-        bottomSheetDataBehavior.addBottomSheetCallback(sharedCallback);
-        bottomSheetReporterBehavior.addBottomSheetCallback(sharedCallback);
+            bottomSheetDataBehavior.addBottomSheetCallback(sharedCallback);
+            bottomSheetReporterBehavior.addBottomSheetCallback(sharedCallback);
+            callbacksAdded = true;
+        }
 
         buttonRecordedData.setOnClickListener(v -> {
             if (bottomSheetReporterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){

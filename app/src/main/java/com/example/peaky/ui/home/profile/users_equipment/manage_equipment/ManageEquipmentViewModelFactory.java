@@ -1,3 +1,4 @@
+/*
 package com.example.peaky.ui.home.profile.users_equipment.manage_equipment;
 
 import androidx.annotation.NonNull;
@@ -27,3 +28,6 @@ public class ManageEquipmentViewModelFactory implements ViewModelProvider.Factor
     }
 }
 
+
+
+ */

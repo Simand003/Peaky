@@ -7,21 +7,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.example.peaky.R;
+import com.example.peaky.adapter.SportRecyclerAdapter;
+import com.example.peaky.repository.sport.SportRepository;
+import com.example.peaky.source.SportDataSource;
 import com.example.peaky.ui.home.HomeFragment;
-import com.example.peaky.ui.home.record.RecordFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SaveActivityFragment extends Fragment {
 
@@ -32,6 +37,23 @@ public class SaveActivityFragment extends Fragment {
 
     private View bottomSheetPeaks, bottomSheetSports;
     private BottomSheetBehavior<View> bottomSheetPeaksBehavior, bottomSheetSportsBehavior;
+
+    private RecyclerView recyclerViewSport, recyclerViewPeaks;
+
+    private SaveActivityViewModel saveActivityViewModel;
+    private SportRepository sportRepository;
+
+    private String selectedSportName = null;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        SportDataSource sportDataSource = new SportDataSource(FirebaseFirestore.getInstance());
+        sportRepository = new SportRepository(requireContext(), sportDataSource);
+        SaveActivityViewModelFactory factory = new SaveActivityViewModelFactory(sportRepository);
+        saveActivityViewModel = new ViewModelProvider(this, factory).get(SaveActivityViewModel.class);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -58,6 +80,8 @@ public class SaveActivityFragment extends Fragment {
         bottomSheetSportsBehavior = BottomSheetBehavior.from(bottomSheetSports);
         bottomSheetSportsBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
+        recyclerViewSport = view.findViewById(R.id.recycler_view_sports);
+        recyclerViewSport.setLayoutManager(new LinearLayoutManager(requireContext()));
         return view;
     }
 
@@ -70,6 +94,7 @@ public class SaveActivityFragment extends Fragment {
             navController.popBackStack();
         });
 
+        // TODO: crasha ma è stato implementato in automatico
         buttonSave.setOnClickListener(v -> {
             getParentFragmentManager().popBackStack();
             getParentFragmentManager().popBackStack();
@@ -96,7 +121,6 @@ public class SaveActivityFragment extends Fragment {
                 });
 
 
-
         textPeaks.setOnClickListener(v -> {
             if (bottomSheetSportsBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
                 bottomSheetSportsBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -109,6 +133,21 @@ public class SaveActivityFragment extends Fragment {
                 bottomSheetPeaksBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
             bottomSheetSportsBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            SportRecyclerAdapter adapter = (SportRecyclerAdapter) recyclerViewSport.getAdapter();
+            if (adapter != null) {
+                adapter.setSelectedSportByName(selectedSportName);
+            }
+        });
+
+        saveActivityViewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
+            if (sports != null && !sports.isEmpty()) {
+                SportRecyclerAdapter adapter = new SportRecyclerAdapter(requireContext(), sports, sportName -> {
+                    selectedSportName = sportName; // aggiorna la variabile nel fragment
+                    textSport.setText(sportName != null ? sportName : ""); // aggiorna il TextInputEditText
+                    bottomSheetSportsBehavior.setState(BottomSheetBehavior.STATE_HIDDEN); // chiudi il bottom sheet
+                });
+                recyclerViewSport.setAdapter(adapter);
+            }
         });
     }
 }

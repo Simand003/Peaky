@@ -24,4 +24,3 @@ public class RecordViewModelFactory implements ViewModelProvider.Factory {
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
 }
-

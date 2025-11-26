@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peaky.R;
 import com.example.peaky.model.Sport;
+import com.example.peaky.ui.home.record.saveactivity.OnSportSelectedListener;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,18 +23,19 @@ public class SportRecyclerAdapter extends RecyclerView.Adapter<SportRecyclerAdap
 
     private final Context context;
     private final List<Sport> sports;
-    private final Set<String> selectedSportNames; // Usa il nome sport come id
+    private String selectedSportName = null; // Usa il nome sport come id
+    private final OnSportSelectedListener listener;
 
-    public SportRecyclerAdapter(Context context, List<Sport> sports) {
+    public SportRecyclerAdapter(Context context, List<Sport> sports, OnSportSelectedListener listener) {
         this.context = context;
         this.sports = new ArrayList<>(sports);
-        this.selectedSportNames = new HashSet<>();
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public SportViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.card_default_sport, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_sport, parent, false);
         return new SportViewHolder(view);
     }
 
@@ -41,19 +43,25 @@ public class SportRecyclerAdapter extends RecyclerView.Adapter<SportRecyclerAdap
     public void onBindViewHolder(@NonNull SportViewHolder holder, int position) {
         Sport sport = sports.get(position);
         holder.textView.setText(sport.getName());
+        holder.iconImageView.setImageResource(sport.getIcon());
 
-        boolean isSelected = selectedSportNames.contains(sport.getName());
+        boolean isSelected = sport.getName().equals(selectedSportName);
+
         holder.checkImageView.setImageResource(isSelected
                 ? R.drawable.baseline_radio_button_checked_24
                 : R.drawable.baseline_radio_button_unchecked_24);
 
         holder.itemView.setOnClickListener(v -> {
             if (isSelected) {
-                selectedSportNames.remove(sport.getName());
+                selectedSportName = null;
             } else {
-                selectedSportNames.add(sport.getName());
+                selectedSportName = sport.getName();
             }
-            notifyItemChanged(position);
+            notifyDataSetChanged();
+
+            if (listener != null) {
+                listener.onSportSelected(selectedSportName);
+            }
         });
     }
 
@@ -62,27 +70,12 @@ public class SportRecyclerAdapter extends RecyclerView.Adapter<SportRecyclerAdap
         return sports.size();
     }
 
-    public List<Sport> getSelectedSports() {
-        List<Sport> selected = new ArrayList<>();
-        for (Sport sport : sports) {
-            if (selectedSportNames.contains(sport.getName())) {
-                selected.add(sport);
-            }
-        }
-        return selected;
+    public String getSelectedSportName() {
+        return selectedSportName;
     }
 
-    public void updateSports(List<Sport> newSports) {
-        sports.clear();
-        sports.addAll(newSports);
-        notifyDataSetChanged();
-    }
-
-    public void setSelectedSportsByName(List<String> sportNames) {
-        selectedSportNames.clear();
-        if (sportNames != null) {
-            selectedSportNames.addAll(sportNames);
-        }
+    public void setSelectedSportByName(String sportName) {
+        selectedSportName = sportName;
         notifyDataSetChanged();
     }
 
