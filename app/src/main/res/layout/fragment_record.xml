@@ -372,7 +372,10 @@
                     android:layout_marginTop="16dp"
                     android:gravity="start|top"
                     android:hint="@string/notes_for_reporters"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:maxLines="6"
+                    />
                 </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

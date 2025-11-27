@@ -4,6 +4,8 @@ import static com.example.peaky.ui.home.record.RecordFragment.FOUND;
 import static com.example.peaky.ui.home.record.RecordFragment.NOT_FOUND;
 import static com.example.peaky.ui.home.record.RecordFragment.SEARCHING;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.Chronometer;
@@ -26,6 +28,23 @@ public class RecordViewModel extends ViewModel {
     private final OSMRepository osmRepository;
     private final MutableLiveData<List<Sport>> sportsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> buttonMarginBottom = new MutableLiveData<>(16);
+
+    private final MutableLiveData<Boolean> isRecording = new MutableLiveData<>(false);
+    private final MutableLiveData<Long> elapsedTime = new MutableLiveData<>(0L);
+
+    private long lastStartTimestamp = 0L;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            long current = System.currentTimeMillis();
+            long updated = elapsedTime.getValue() + (current - lastStartTimestamp);
+            elapsedTime.setValue(updated);
+            lastStartTimestamp = current;
+
+            handler.postDelayed(this, 1000); // aggiorna ogni secondo
+        }
+    };
 
     public RecordViewModel(SportRepository sportRepository, OSMRepository osmRepository) {
         this.sportRepository = sportRepository;
@@ -76,15 +95,40 @@ public class RecordViewModel extends ViewModel {
         buttonMarginBottom.setValue(16);
     }
 
-    public void updateRecord(boolean isRecording, Chronometer chronometer) {
-        if (!isRecording) {
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
-            isRecording = true;
-        } else {
-            chronometer.start();
-            isRecording = false;
-        }
+    public LiveData<Boolean> getIsRecording() {
+        return isRecording;
+    }
+
+    public LiveData<Long> getElapsedTime() {
+        return elapsedTime;
+    }
+
+    // START registrazione
+    public void startRecording() {
+        if (Boolean.TRUE.equals(isRecording.getValue())) return;
+
+        lastStartTimestamp = System.currentTimeMillis();
+        handler.post(timerRunnable);
+        isRecording.setValue(true);
+    }
+
+    // PAUSE registrazione
+    public void stopRecording() {
+        if (!Boolean.TRUE.equals(isRecording.getValue())) return;
+
+        handler.removeCallbacks(timerRunnable);
+        long current = System.currentTimeMillis();
+        long updated = elapsedTime.getValue() + (current - lastStartTimestamp);
+        elapsedTime.setValue(updated);
+
+        isRecording.setValue(false);
+    }
+
+    // Resetta tutto (se utile in futuro)
+    public void reset() {
+        handler.removeCallbacks(timerRunnable);
+        isRecording.setValue(false);
+        elapsedTime.setValue(0L);
     }
 }
 

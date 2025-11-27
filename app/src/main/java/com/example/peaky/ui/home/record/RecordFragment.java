@@ -68,15 +68,15 @@ import java.util.Locale;
 
 public class RecordFragment extends Fragment {
 
+    // STRINGHE RICERCA GPS
     public static final String FOUND = "Found";
     public static final String SEARCHING = "Searching";
     public static final String NOT_FOUND = "Not found";
+
     private BottomNavigationView bottomNavigationView;
 
-    // ELIMINARE? private Spinner spinner;
-
     private LinearLayout linearLayoutGPSLocator, buttonsContainer;
-    private TextView textGPSLocator, textAltitude, textViewChronometer;
+    private TextView textGPSLocator, textAltitude, textViewTimer;
     private static final long SEARCH_TIMEOUT = 10000;
     private long lastLocationUpdate = 0;
     private FusedLocationProviderClient locationClient;
@@ -92,19 +92,19 @@ public class RecordFragment extends Fragment {
     private MapView mapView;
     private Marker userMarker;
 
-    private boolean isRecording = false;
     private boolean returningFromSettings = false;
 
     private boolean isFirstLocationUpdate = true;
     private boolean isCentralizing = false;
-
-    private Chronometer chronometer;
 
     private SportRepository sportRepository;
     private RecordViewModel recordViewModel;
     private OSMRepository osmRepository;
 
     private boolean callbacksAdded = false;
+
+    // ACTIVITY DATA
+
 
     public RecordFragment() {
     }
@@ -134,7 +134,7 @@ public class RecordFragment extends Fragment {
 
         //Initializing the text view
         //textAltitude = view.findViewById(R.id.textAltitude);
-        textViewChronometer = view.findViewById(R.id.textView_chronometer);
+        textViewTimer = view.findViewById(R.id.textView_chronometer);
 
         //Initializing the buttons
         buttonsContainer = view.findViewById(R.id.buttons_container);
@@ -142,6 +142,7 @@ public class RecordFragment extends Fragment {
         buttonGoToPosition = view.findViewById(R.id.button_go_to_position);
         buttonRecordAction = view.findViewById(R.id.button_record_action);
         buttonRecordEnd = view.findViewById(R.id.button_record_end);
+        buttonRecordEnd.setVisibility(View.GONE);
         buttonRecordedData = view.findViewById(R.id.button_recorded_data);
         buttonReporterTools = view.findViewById(R.id.button_reporters_tool);
 
@@ -161,11 +162,11 @@ public class RecordFragment extends Fragment {
         bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        // ELIMINARE? spinner = view.findViewById(R.id.spinner_sports);
-
         mapView = view.findViewById(R.id.mapView);
 
         checkLocationPermission();
+        setupObservers();
+        setupListeners();
 
         return view;
     }
@@ -173,14 +174,6 @@ public class RecordFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    /* ELIMINARE?
-        recordViewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
-            if (sports != null && !sports.isEmpty()) {
-                SportSpinnerAdapter adapter = new SportSpinnerAdapter(requireContext(), sports);
-                spinner.setAdapter(adapter);
-            }
-        });
-        */
 
         mapView.addMapListener(new MapListener() {
             @Override
@@ -197,81 +190,13 @@ public class RecordFragment extends Fragment {
             }
         });
 
-        buttonBack.setOnClickListener(v -> {
-            if (!isRecording) {
-                closeFragment();
-            } else {
-                requireActivity().onBackPressed();
-            }
-            if (bottomNavigationView != null) {
-                bottomNavigationView.setVisibility(View.VISIBLE);
-                bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-            }
-        });
-
-        buttonGoToPosition.setOnClickListener(v -> centerOnUserLocation());
-
-        buttonRecordAction.setOnClickListener(v -> {
-            if (!isRecording) {
-                buttonRecordAction.setImageResource(R.drawable.record_pause);
-                buttonRecordEnd.setVisibility(View.GONE);
-
-                //current_activity = new Activity();
-                isRecording = true;
-            } else {
-                buttonRecordAction.setImageResource(R.drawable.record_continue);
-                buttonRecordEnd.setVisibility(View.VISIBLE);
-                isRecording = false;
-            }
-        });
-
-        buttonRecordEnd.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(v);
-            navController.navigate(R.id.saveActivityFragment);
-        });
-
         recordViewModel.getButtonMarginBottom().observe(getViewLifecycleOwner(), marginBottom -> {
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) buttonsContainer.getLayoutParams();
             params.setMargins(params.leftMargin, params.topMargin, 16, marginBottom);
             buttonsContainer.setLayoutParams(params);
         });
 
-        // Creo un callback riutilizzabile
-        if (!callbacksAdded) {
-            BottomSheetBehavior.BottomSheetCallback sharedCallback = new BottomSheetBehavior.BottomSheetCallback() {
-                @Override
-                public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                    if (newState == BottomSheetBehavior.STATE_COLLAPSED ||
-                            newState == BottomSheetBehavior.STATE_HIDDEN) {
-                        recordViewModel.resetButtonPosition();
-                    } else {
-                        recordViewModel.adjustButtonPosition(bottomSheet);
-                    }
-                }
-                @Override
-                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                    recordViewModel.adjustButtonPosition(bottomSheet);
-                }
-            };
-
-            bottomSheetDataBehavior.addBottomSheetCallback(sharedCallback);
-            bottomSheetReporterBehavior.addBottomSheetCallback(sharedCallback);
-            callbacksAdded = true;
-        }
-
-        buttonRecordedData.setOnClickListener(v -> {
-            if (bottomSheetReporterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
-                bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            }
-            bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        });
-
-        buttonReporterTools.setOnClickListener(v -> {
-            if (bottomSheetDataBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
-                bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            }
-            bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        });
+        setupBottomSheetCallbacks();
     }
 
     private void checkLocationPermission() {
@@ -389,9 +314,13 @@ public class RecordFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (!isRecording) {
+                boolean rec = Boolean.TRUE.equals(recordViewModel.getIsRecording().getValue());
+                if (!rec) {
                     closeFragment();
+                } else {
+                    requireActivity().onBackPressed();
                 }
+
             }
         });
     }
@@ -407,6 +336,8 @@ public class RecordFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        callbacksAdded = false;
 
         if (mapView != null) {
             mapView.onPause();
@@ -510,6 +441,131 @@ public class RecordFragment extends Fragment {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
+
+    private void setupBottomSheetCallbacks() {
+        if (callbacksAdded) return;
+
+        BottomSheetBehavior.BottomSheetCallback sharedCallback = new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                adjustButtonsForBothSheets();
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                adjustButtonsForBothSheets();
+            }
+        };
+
+        bottomSheetDataBehavior.addBottomSheetCallback(sharedCallback);
+        bottomSheetReporterBehavior.addBottomSheetCallback(sharedCallback);
+
+        callbacksAdded = true;
+
+        buttonRecordedData.setOnClickListener(v -> {
+            if (bottomSheetReporterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+                bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+            bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
+
+        buttonReporterTools.setOnClickListener(v -> {
+            if (bottomSheetDataBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+                bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+            bottomSheetReporterBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
+    }
+
+    private void adjustButtonsForBothSheets() {
+        View sheetToConsider = null;
+
+        // Priorità: lo sheet più "alto" vince
+        if (bottomSheetReporterBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED ||
+                bottomSheetReporterBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING ||
+                bottomSheetReporterBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
+
+            sheetToConsider = bottomSheetReporter;
+        }
+        else if (bottomSheetDataBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED ||
+                bottomSheetDataBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING ||
+                bottomSheetDataBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
+
+            sheetToConsider = bottomSheetData;
+        }
+
+        if (sheetToConsider != null) {
+            recordViewModel.adjustButtonPosition(sheetToConsider);
+        } else {
+            recordViewModel.resetButtonPosition();
+        }
+    }
+
+    private void setupObservers() {
+        recordViewModel.getIsRecording().observe(getViewLifecycleOwner(), isRecording -> {
+            long time = recordViewModel.getElapsedTime().getValue();
+
+            if (isRecording) {
+                buttonRecordAction.setImageResource(R.drawable.record_pause);
+                buttonRecordEnd.setVisibility(View.GONE);
+            } else {
+                buttonRecordAction.setImageResource(R.drawable.record_continue);
+
+                // Mostra il tasto END solo se hai registrato almeno un secondo
+                if (time > 0) {
+                    buttonRecordEnd.setVisibility(View.VISIBLE);
+                } else {
+                    buttonRecordEnd.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+        recordViewModel.getElapsedTime().observe(getViewLifecycleOwner(), time -> {
+            textViewTimer.setText(formatTime(time));
+        });
+    }
+
+    private void setupListeners() {
+        // START / PAUSE
+        buttonRecordAction.setOnClickListener(v -> {
+            if (Boolean.TRUE.equals(recordViewModel.getIsRecording().getValue())) {
+                recordViewModel.stopRecording();
+            } else {
+                recordViewModel.startRecording();
+            }
+        });
+
+        // END → vai al fragment successivo
+        buttonRecordEnd.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.saveActivityFragment);
+        });
+
+        buttonGoToPosition.setOnClickListener(v -> centerOnUserLocation());
+
+        buttonBack.setOnClickListener(v -> {
+            boolean rec = Boolean.TRUE.equals(recordViewModel.getIsRecording().getValue());
+            if (!rec) {
+                closeFragment();
+            } else {
+                requireActivity().onBackPressed();
+            }
+            if (bottomNavigationView != null) {
+                bottomNavigationView.setVisibility(View.VISIBLE);
+                bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+            }
+        });
+    }
+
+    private String formatTime(long ms) {
+        long sec = ms / 1000;
+        long h = sec / 3600;
+        long m = (sec % 3600) / 60;
+        long s = sec % 60;
+        return String.format("%02d:%02d:%02d", h, m, s);
+    }
+
 }
 
 // TODO: AGGIUNGERE ANIMAZIONE MARKER POSIZIONE
