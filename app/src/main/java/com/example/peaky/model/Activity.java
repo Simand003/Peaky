@@ -2,7 +2,8 @@ package com.example.peaky.model;
 
 public class Activity {
 
-    private String uid;
+    private String id;
+    private String userId;
     private String name;// nome dell'attività (es: "Corsa")
     private Sport sport;
     private long duration;      // durata in millisecondi
@@ -12,9 +13,10 @@ public class Activity {
     private double elevationLoss;
     private String description;
 
-    public Activity(String uid, String name, Sport sport, long duration, double distance, long startTime,
+    public Activity(String uid,String userId, String name, Sport sport, long duration, double distance, long startTime,
                     double elevationGain, double elevationLoss, String description) {
-        this.uid = uid;
+        this.id = uid;
+        this.userId = userId;
         this.name = name;
         this.sport=sport;
         this.duration = duration;
@@ -25,12 +27,20 @@ public class Activity {
         this.description = description;
     }
 
-    public String getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setId(String uid) {
+        this.id = uid;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -100,7 +110,7 @@ public class Activity {
     @Override
     public String toString() {
         return "Activity{" +
-                "uid='" + uid + '\'' +
+                "uid='" + id + '\'' +
                 "name='" + name + '\'' +
                 ", duration=" + duration +
                 ", distance=" + distance +

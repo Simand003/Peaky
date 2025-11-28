@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/recordFragment"
-        android:name="com.example.peaky.ui.home.record.RecordFragment"
+        android:name="com.example.peaky.ui.home.record_activity.record.RecordFragment"
         android:label="Record"
         tools:layout="@layout/fragment_record">
         <action
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/saveActivityFragment"
-        android:name="com.example.peaky.ui.home.record.saveactivity.SaveActivityFragment"
+        android:name="com.example.peaky.ui.home.record_activity.saveactivity.SaveActivityFragment"
         android:label="Save Activity"
         tools:layout="@layout/fragment_save_activity" />
 
@@ -47,8 +47,7 @@
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <action
-            android:id="@+id/action_profileFragment_to_equipmentFragment"
-            app:destination="@id/usersEquipmentFragment"/>
+            android:id="@+id/action_profileFragment_to_equipmentFragment"/>
     </fragment>
 
     <fragment

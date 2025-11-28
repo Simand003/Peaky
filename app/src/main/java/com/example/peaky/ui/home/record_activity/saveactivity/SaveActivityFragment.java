@@ -1,4 +1,4 @@
-package com.example.peaky.ui.home.record.saveactivity;
+package com.example.peaky.ui.home.record_activity.saveactivity;
 
 import android.os.Bundle;
 
@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -96,13 +98,12 @@ public class SaveActivityFragment extends Fragment {
 
         // TODO: crasha ma è stato implementato in automatico
         buttonSave.setOnClickListener(v -> {
-            getParentFragmentManager().popBackStack();
-            getParentFragmentManager().popBackStack();
+            NavOptions navOptions = new NavOptions.Builder()
+                    .setPopUpTo(R.id.homeFragment, true)
+                    .build();
 
-            HomeFragment homeFragment = new HomeFragment();
-            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            transaction.replace(R.id.nav_host_fragment, homeFragment);
-            transaction.commit();
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.homeFragment, null, navOptions);
 
             bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
             if (bottomNavigationView != null) {
@@ -150,4 +151,6 @@ public class SaveActivityFragment extends Fragment {
             }
         });
     }
+
+
 }

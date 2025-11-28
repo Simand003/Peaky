@@ -1,4 +1,4 @@
-package com.example.peaky.ui.home.record;
+package com.example.peaky.ui.home.record_activity.record;
 
 import static com.example.peaky.util.Constants.CANCEL;
 import static com.example.peaky.util.Constants.GO_TO_SETTINGS;
@@ -33,19 +33,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.peaky.R;
-import com.example.peaky.adapter.SportSpinnerAdapter;
-import com.example.peaky.model.Activity;
+import com.example.peaky.repository.ActivityRepository;
 import com.example.peaky.repository.OSMRepository;
-import com.example.peaky.repository.sport.SportRepository;
-import com.example.peaky.source.SportDataSource;
 import com.example.peaky.source.osm.OSMDataSource;
+import com.example.peaky.ui.home.record_activity.ActivityDataRecordedViewModel;
+import com.example.peaky.ui.home.record_activity.ActivityDataRecordedViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -53,7 +50,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -63,8 +59,6 @@ import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-
-import java.util.Locale;
 
 public class RecordFragment extends Fragment {
 
@@ -97,9 +91,10 @@ public class RecordFragment extends Fragment {
     private boolean isFirstLocationUpdate = true;
     private boolean isCentralizing = false;
 
-    private SportRepository sportRepository;
     private RecordViewModel recordViewModel;
     private OSMRepository osmRepository;
+    private ActivityRepository activityRepository;
+    private ActivityDataRecordedViewModel activityDataRecordedViewModel;
 
     private boolean callbacksAdded = false;
 
@@ -115,11 +110,12 @@ public class RecordFragment extends Fragment {
 
         Configuration.getInstance().setUserAgentValue(requireContext().getPackageName());
 
-        SportDataSource sportDataSource = new SportDataSource(FirebaseFirestore.getInstance());
-        sportRepository = new SportRepository(requireContext(), sportDataSource);
         osmRepository = new OSMRepository(new OSMDataSource());
-        RecordViewModelFactory factory = new RecordViewModelFactory(sportRepository, osmRepository);
+        RecordViewModelFactory factory = new RecordViewModelFactory(osmRepository);
         recordViewModel = new ViewModelProvider(this, factory).get(RecordViewModel.class);
+        activityDataRecordedViewModel = new ViewModelProvider(this,
+                new ActivityDataRecordedViewModelFactory(activityRepository))
+                .get(ActivityDataRecordedViewModel.class);
     }
 
     @Override
@@ -314,7 +310,7 @@ public class RecordFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                boolean rec = Boolean.TRUE.equals(recordViewModel.getIsRecording().getValue());
+                boolean rec = Boolean.TRUE.equals(activityDataRecordedViewModel.getIsRecording().getValue());
                 if (!rec) {
                     closeFragment();
                 } else {
@@ -502,8 +498,8 @@ public class RecordFragment extends Fragment {
     }
 
     private void setupObservers() {
-        recordViewModel.getIsRecording().observe(getViewLifecycleOwner(), isRecording -> {
-            long time = recordViewModel.getElapsedTime().getValue();
+        activityDataRecordedViewModel.getIsRecording().observe(getViewLifecycleOwner(), isRecording -> {
+            long time = activityDataRecordedViewModel.getElapsedTime().getValue();
 
             if (isRecording) {
                 buttonRecordAction.setImageResource(R.drawable.record_pause);
@@ -521,7 +517,7 @@ public class RecordFragment extends Fragment {
         });
 
 
-        recordViewModel.getElapsedTime().observe(getViewLifecycleOwner(), time -> {
+        activityDataRecordedViewModel.getElapsedTime().observe(getViewLifecycleOwner(), time -> {
             textViewTimer.setText(formatTime(time));
         });
     }
@@ -529,10 +525,10 @@ public class RecordFragment extends Fragment {
     private void setupListeners() {
         // START / PAUSE
         buttonRecordAction.setOnClickListener(v -> {
-            if (Boolean.TRUE.equals(recordViewModel.getIsRecording().getValue())) {
-                recordViewModel.stopRecording();
+            if (Boolean.TRUE.equals(activityDataRecordedViewModel.getIsRecording().getValue())) {
+                activityDataRecordedViewModel.stopRecording();
             } else {
-                recordViewModel.startRecording();
+                activityDataRecordedViewModel.startRecording();
             }
         });
 
@@ -545,7 +541,7 @@ public class RecordFragment extends Fragment {
         buttonGoToPosition.setOnClickListener(v -> centerOnUserLocation());
 
         buttonBack.setOnClickListener(v -> {
-            boolean rec = Boolean.TRUE.equals(recordViewModel.getIsRecording().getValue());
+            boolean rec = Boolean.TRUE.equals(activityDataRecordedViewModel.getIsRecording().getValue());
             if (!rec) {
                 closeFragment();
             } else {
@@ -565,7 +561,6 @@ public class RecordFragment extends Fragment {
         long s = sec % 60;
         return String.format("%02d:%02d:%02d", h, m, s);
     }
-
 }
 
 // TODO: AGGIUNGERE ANIMAZIONE MARKER POSIZIONE

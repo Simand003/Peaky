@@ -12,11 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peaky.R;
 import com.example.peaky.model.Sport;
-import com.example.peaky.ui.home.record.saveactivity.OnSportSelectedListener;
+import com.example.peaky.ui.home.record_activity.saveactivity.OnSportSelectedListener;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
 
 public class SportRecyclerAdapter extends RecyclerView.Adapter<SportRecyclerAdapter.SportViewHolder> {
