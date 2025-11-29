@@ -7,7 +7,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.peaky.model.Activity;
+import com.example.peaky.model.Sport;
 import com.example.peaky.repository.ActivityRepository;
+import com.example.peaky.repository.sport.SportRepository;
+
+import java.util.List;
 
 public class ActivityDataRecordedViewModel extends ViewModel {
 
@@ -34,10 +39,15 @@ public class ActivityDataRecordedViewModel extends ViewModel {
     public LiveData<Long> getElapsedTime() { return elapsedTime; }
     public LiveData<Long> getStartTimestamp() { return startTimestamp; }
 
-    private ActivityRepository activityRepository;
+    private final MutableLiveData<List<Sport>> sportsLiveData = new MutableLiveData<>();
 
-    public ActivityDataRecordedViewModel(ActivityRepository activityRepository) {
+    private final ActivityRepository activityRepository;
+    private final SportRepository sportRepository;
+
+    public ActivityDataRecordedViewModel(ActivityRepository activityRepository, SportRepository sportRepository) {
         this.activityRepository = activityRepository;
+        this.sportRepository = sportRepository;
+        loadSports();
     }
 
     public void startRecording() {
@@ -64,6 +74,35 @@ public class ActivityDataRecordedViewModel extends ViewModel {
         elapsedTime.setValue(updated);
 
         isRecording.setValue(false);
+    }
+
+    private void loadSports() {
+        List<Sport> sports = sportRepository.getSports();
+        sportsLiveData.setValue(sports);
+    }
+
+    public LiveData<List<Sport>> getSports() {
+        return sportsLiveData;
+    }
+
+    public void saveActivity(String userId, String name, String sport, String description) {
+        Activity activity = new Activity();
+        activity.setUserId(userId);
+        if (name.isEmpty() || name.isBlank()){
+            activity.setName("New activity");
+        } else
+            activity.setName(name);
+        if (sport.isEmpty() || sport.isBlank()){
+            activity.setName("Hiking");
+        } else
+            activity.setSport(sport);
+        activity.setDuration(elapsedTime.getValue());
+        // DISTANCE
+        activity.setStartTime(startTimestamp.getValue());
+        // ELEVATION GAIN
+        // ELEVATION LOSS
+        activity.setDescription(description);
+        activityRepository.addActivity(userId, activity);
     }
 
     /*

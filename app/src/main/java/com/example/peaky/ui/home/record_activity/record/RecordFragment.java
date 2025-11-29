@@ -40,6 +40,10 @@ import android.widget.TextView;
 import com.example.peaky.R;
 import com.example.peaky.repository.ActivityRepository;
 import com.example.peaky.repository.OSMRepository;
+import com.example.peaky.repository.sport.SportRepository;
+import com.example.peaky.source.SportDataSource;
+import com.example.peaky.source.activity.ActivityFirestoreDataSource;
+import com.example.peaky.source.activity.ActivityLocalDataSource;
 import com.example.peaky.source.osm.OSMDataSource;
 import com.example.peaky.ui.home.record_activity.ActivityDataRecordedViewModel;
 import com.example.peaky.ui.home.record_activity.ActivityDataRecordedViewModelFactory;
@@ -50,6 +54,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -92,14 +97,12 @@ public class RecordFragment extends Fragment {
     private boolean isCentralizing = false;
 
     private RecordViewModel recordViewModel;
+    private SportRepository sportRepository;
     private OSMRepository osmRepository;
     private ActivityRepository activityRepository;
     private ActivityDataRecordedViewModel activityDataRecordedViewModel;
 
     private boolean callbacksAdded = false;
-
-    // ACTIVITY DATA
-
 
     public RecordFragment() {
     }
@@ -111,10 +114,19 @@ public class RecordFragment extends Fragment {
         Configuration.getInstance().setUserAgentValue(requireContext().getPackageName());
 
         osmRepository = new OSMRepository(new OSMDataSource());
+
+        SportDataSource sportDataSource = new SportDataSource(FirebaseFirestore.getInstance());
+        sportRepository = new SportRepository(requireContext(), sportDataSource);
+
         RecordViewModelFactory factory = new RecordViewModelFactory(osmRepository);
         recordViewModel = new ViewModelProvider(this, factory).get(RecordViewModel.class);
-        activityDataRecordedViewModel = new ViewModelProvider(this,
-                new ActivityDataRecordedViewModelFactory(activityRepository))
+
+        ActivityLocalDataSource activityLocalDataSource = new ActivityLocalDataSource();
+        ActivityFirestoreDataSource activityFirestoreDataSource = new ActivityFirestoreDataSource(FirebaseFirestore.getInstance());
+        activityRepository = new ActivityRepository(requireContext(), activityFirestoreDataSource, activityLocalDataSource);
+
+        activityDataRecordedViewModel = new ViewModelProvider(requireActivity(),
+                new ActivityDataRecordedViewModelFactory(activityRepository, sportRepository))
                 .get(ActivityDataRecordedViewModel.class);
     }
 
@@ -529,6 +541,9 @@ public class RecordFragment extends Fragment {
                 activityDataRecordedViewModel.stopRecording();
             } else {
                 activityDataRecordedViewModel.startRecording();
+                if (bottomSheetDataBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetDataBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
             }
         });
 

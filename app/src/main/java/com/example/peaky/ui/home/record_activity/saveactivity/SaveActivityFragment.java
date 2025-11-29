@@ -1,12 +1,12 @@
 package com.example.peaky.ui.home.record_activity.saveactivity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,19 @@ import android.widget.Button;
 
 import com.example.peaky.R;
 import com.example.peaky.adapter.SportRecyclerAdapter;
+import com.example.peaky.model.Activity;
+import com.example.peaky.repository.ActivityRepository;
 import com.example.peaky.repository.sport.SportRepository;
 import com.example.peaky.source.SportDataSource;
-import com.example.peaky.ui.home.HomeFragment;
+import com.example.peaky.source.activity.ActivityFirestoreDataSource;
+import com.example.peaky.source.activity.ActivityLocalDataSource;
+import com.example.peaky.ui.home.record_activity.ActivityDataRecordedViewModel;
+import com.example.peaky.ui.home.record_activity.ActivityDataRecordedViewModelFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SaveActivityFragment extends Fragment {
@@ -37,15 +45,20 @@ public class SaveActivityFragment extends Fragment {
 
     private TextInputEditText textPeaks, textSport;
 
+    private TextInputEditText textName, textDescription;
     private View bottomSheetPeaks, bottomSheetSports;
     private BottomSheetBehavior<View> bottomSheetPeaksBehavior, bottomSheetSportsBehavior;
 
     private RecyclerView recyclerViewSport, recyclerViewPeaks;
 
-    private SaveActivityViewModel saveActivityViewModel;
+    private ActivityDataRecordedViewModel activityDataRecordedViewModel;
     private SportRepository sportRepository;
+    private ActivityRepository activityRepository;
 
     private String selectedSportName = null;
+
+    FirebaseUser currentUser;
+    String userId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,8 +66,14 @@ public class SaveActivityFragment extends Fragment {
 
         SportDataSource sportDataSource = new SportDataSource(FirebaseFirestore.getInstance());
         sportRepository = new SportRepository(requireContext(), sportDataSource);
-        SaveActivityViewModelFactory factory = new SaveActivityViewModelFactory(sportRepository);
-        saveActivityViewModel = new ViewModelProvider(this, factory).get(SaveActivityViewModel.class);
+        ActivityLocalDataSource activityLocalDataSource = new ActivityLocalDataSource();
+        ActivityFirestoreDataSource activityFirestoreDataSource = new ActivityFirestoreDataSource(FirebaseFirestore.getInstance());
+        activityRepository = new ActivityRepository(requireContext(), activityFirestoreDataSource, activityLocalDataSource);
+        // ActivityDataRecordedViewModelFactory factory = new ActivityDataRecordedViewModelFactory(activityRepository, sportRepository);
+        activityDataRecordedViewModel = new ViewModelProvider(requireActivity()/*, factory*/).get(ActivityDataRecordedViewModel.class);
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        userId = currentUser.getUid();
     }
 
     @Override
@@ -71,6 +90,8 @@ public class SaveActivityFragment extends Fragment {
         buttonSave = view.findViewById(R.id.button_save);
         buttonAddPeak = view.findViewById(R.id.button_add_peak);
 
+        textName = view.findViewById(R.id.textField_activity_name);
+        textDescription = view.findViewById(R.id.textField_description);
         textPeaks = view.findViewById(R.id.textField_peaks);
         textSport = view.findViewById(R.id.textField_sport);
 
@@ -96,8 +117,17 @@ public class SaveActivityFragment extends Fragment {
             navController.popBackStack();
         });
 
-        // TODO: crasha ma è stato implementato in automatico
         buttonSave.setOnClickListener(v -> {
+            Long elapsed = activityDataRecordedViewModel.getElapsedTime().getValue();
+            long duration = elapsed != null ? elapsed : 0L;
+            Log.d("SaveActivityFragment", "Elapsed time in ms: " + duration);
+
+            if (duration < 60_000) { // meno di un minuto
+                showDurationTooShortDialog();
+                return;
+            }
+            saveActivity();
+
             NavOptions navOptions = new NavOptions.Builder()
                     .setPopUpTo(R.id.homeFragment, true)
                     .build();
@@ -140,7 +170,7 @@ public class SaveActivityFragment extends Fragment {
             }
         });
 
-        saveActivityViewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
+        activityDataRecordedViewModel.getSports().observe(getViewLifecycleOwner(), sports -> {
             if (sports != null && !sports.isEmpty()) {
                 SportRecyclerAdapter adapter = new SportRecyclerAdapter(requireContext(), sports, sportName -> {
                     selectedSportName = sportName; // aggiorna la variabile nel fragment
@@ -152,5 +182,20 @@ public class SaveActivityFragment extends Fragment {
         });
     }
 
+    private void showDurationTooShortDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Activity too short")
+                .setMessage("The activity must be at least 1 minute long to be saved.")
+                .setPositiveButton("OK", null)
+                .show();
+    }
 
+    private void saveActivity() {
+        activityDataRecordedViewModel.saveActivity(
+                userId,
+                textName.getText().toString(),
+                textSport.getText().toString(),
+                textDescription.getText().toString()
+        );
+    }
 }

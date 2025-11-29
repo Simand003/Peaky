@@ -21,15 +21,13 @@ public class ActivityFirestoreDataSource {
                     .document(userId)
                     .collection("activities")
                     .document();
-            activity.setId(activity.getId());
+            activity.setId(activityRef.getId());
         } else {
             activityRef = firestore.collection("users")
                     .document(userId)
                     .collection("activities")
                     .document(activity.getId());;
         }
-
-        activity.setUserId(userId);
 
         activityRef.set(activity)
                 .addOnSuccessListener(aVoid -> {

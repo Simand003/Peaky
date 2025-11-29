@@ -5,7 +5,7 @@ public class Activity {
     private String id;
     private String userId;
     private String name;// nome dell'attività (es: "Corsa")
-    private Sport sport;
+    private String sport;
     private long duration;      // durata in millisecondi
     private double distance;    // distanza in km
     private long startTime;     // quando è stata registrata
@@ -13,9 +13,11 @@ public class Activity {
     private double elevationLoss;
     private String description;
 
-    public Activity(String uid,String userId, String name, Sport sport, long duration, double distance, long startTime,
+    public Activity() {}
+
+    public Activity(String id,String userId, String name, String sport, long duration, double distance, long startTime,
                     double elevationGain, double elevationLoss, String description) {
-        this.id = uid;
+        this.id = id;
         this.userId = userId;
         this.name = name;
         this.sport=sport;
@@ -51,11 +53,11 @@ public class Activity {
         this.name = name;
     }
 
-    public Sport getSport() {
+    public String getSport() {
         return sport;
     }
 
-    public void setSport(Sport sport) {
+    public void setSport(String sport) {
         this.sport = sport;
     }
 
