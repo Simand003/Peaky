@@ -1,5 +1,9 @@
 package com.example.peaky.model;
 
+import android.location.Location;
+
+import java.util.List;
+
 public class Activity {
 
     private String id;
@@ -8,6 +12,7 @@ public class Activity {
     private String sport;
     private long duration;      // durata in millisecondi
     private double distance;    // distanza in km
+    private List<Location> points;
     private long startTime;     // quando è stata registrata
     private double elevationGain;
     private double elevationLoss;
@@ -15,14 +20,16 @@ public class Activity {
 
     public Activity() {}
 
-    public Activity(String id,String userId, String name, String sport, long duration, double distance, long startTime,
-                    double elevationGain, double elevationLoss, String description) {
+    public Activity(String id, String userId, String name, String sport, long duration,
+                    double distance, List<Location> points, long startTime, double elevationGain,
+                    double elevationLoss, String description) {
         this.id = id;
         this.userId = userId;
         this.name = name;
-        this.sport=sport;
+        this.sport = sport;
         this.duration = duration;
         this.distance = distance;
+        this.points = points;
         this.startTime = startTime;
         this.elevationGain = elevationGain;
         this.elevationLoss = elevationLoss;
@@ -75,6 +82,14 @@ public class Activity {
 
     public void setDistance(double distance) {
         this.distance = distance;
+    }
+
+    public List<Location> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<Location> points) {
+        this.points = points;
     }
 
     public long getStartTime() {

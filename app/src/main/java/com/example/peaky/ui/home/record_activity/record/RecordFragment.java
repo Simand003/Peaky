@@ -64,6 +64,7 @@ import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 
 public class RecordFragment extends Fragment {
 
@@ -75,7 +76,7 @@ public class RecordFragment extends Fragment {
     private BottomNavigationView bottomNavigationView;
 
     private LinearLayout linearLayoutGPSLocator, buttonsContainer;
-    private TextView textGPSLocator, textAltitude, textViewTimer;
+    private TextView textGPSLocator, textAltitude, textViewTimer, textViewDistance;
     private static final long SEARCH_TIMEOUT = 10000;
     private long lastLocationUpdate = 0;
     private FusedLocationProviderClient locationClient;
@@ -143,6 +144,7 @@ public class RecordFragment extends Fragment {
         //Initializing the text view
         //textAltitude = view.findViewById(R.id.textAltitude);
         textViewTimer = view.findViewById(R.id.textView_chronometer);
+        textViewDistance = view.findViewById(R.id.textView_distance);
 
         //Initializing the buttons
         buttonsContainer = view.findViewById(R.id.buttons_container);
@@ -396,6 +398,10 @@ public class RecordFragment extends Fragment {
             }
 
             Location location = locationResult.getLastLocation();
+
+            activityDataRecordedViewModel.addLocationPoint(location);
+            recordViewModel.updatePolyline(activityDataRecordedViewModel.getLocations().getValue());
+
             if (location != null) {
                 isSearching = false;
                 cambiaStato(1);
@@ -528,10 +534,25 @@ public class RecordFragment extends Fragment {
             }
         });
 
-
         activityDataRecordedViewModel.getElapsedTime().observe(getViewLifecycleOwner(), time -> {
             textViewTimer.setText(formatTime(time));
         });
+        activityDataRecordedViewModel.getDistance().observe(getViewLifecycleOwner(), distance -> {
+            textViewDistance.setText(formatDistance(distance));
+        });
+
+        recordViewModel.getPolylinePoints().observe(getViewLifecycleOwner(), points -> {
+            if (mapView == null) return;
+
+            mapView.getOverlayManager().removeIf(overlay -> overlay instanceof Polyline);
+
+            Polyline polyline = new Polyline();
+            polyline.setPoints(points);
+            mapView.getOverlayManager().add(polyline);
+
+            mapView.invalidate();
+        });
+
     }
 
     private void setupListeners() {
@@ -575,6 +596,11 @@ public class RecordFragment extends Fragment {
         long m = (sec % 3600) / 60;
         long s = sec % 60;
         return String.format("%02d:%02d:%02d", h, m, s);
+    }
+
+    public static String formatDistance(double distanceInMeters) {
+        double distanceInKm = distanceInMeters / 1000.0;
+        return String.format("%.2f km", distanceInKm);
     }
 }
 
