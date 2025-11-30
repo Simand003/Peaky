@@ -400,7 +400,6 @@ public class RecordFragment extends Fragment {
             Location location = locationResult.getLastLocation();
 
             activityDataRecordedViewModel.addLocationPoint(location);
-            recordViewModel.updatePolyline(activityDataRecordedViewModel.getLocations().getValue());
 
             if (location != null) {
                 isSearching = false;
@@ -541,7 +540,7 @@ public class RecordFragment extends Fragment {
             textViewDistance.setText(formatDistance(distance));
         });
 
-        recordViewModel.getPolylinePoints().observe(getViewLifecycleOwner(), points -> {
+        activityDataRecordedViewModel.getPolylinePoints().observe(getViewLifecycleOwner(), points -> {
             if (mapView == null) return;
 
             mapView.getOverlayManager().removeIf(overlay -> overlay instanceof Polyline);

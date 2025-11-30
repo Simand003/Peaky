@@ -27,8 +27,6 @@ public class RecordViewModel extends ViewModel {
     private final MutableLiveData<List<Sport>> sportsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> buttonMarginBottom = new MutableLiveData<>(16);
 
-    private final MutableLiveData<List<GeoPoint>> polylinePoints = new MutableLiveData<>(new ArrayList<>());
-
     public RecordViewModel(OSMRepository osmRepository) {
         this.osmRepository = osmRepository;
     }
@@ -64,20 +62,6 @@ public class RecordViewModel extends ViewModel {
 
     public void resetButtonPosition() {
         buttonMarginBottom.setValue(16);
-    }
-
-    public LiveData<List<GeoPoint>> getPolylinePoints() {
-        return polylinePoints;
-    }
-
-    public void updatePolyline(List<Location> locations) {
-        List<GeoPoint> points = new ArrayList<>();
-
-        for (Location loc : locations) {
-            points.add(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
-        }
-
-        polylinePoints.setValue(points);
     }
 }
 

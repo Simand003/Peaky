@@ -25,8 +25,11 @@ public class ActivityDataRecordedViewModel extends ViewModel {
     private final MutableLiveData<Long> startTimestamp = new MutableLiveData<>(0L);
     private final MutableLiveData<List<Location>> locationsLiveData = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Double> distanceLiveData = new MutableLiveData<>(0.0);
+    private final MutableLiveData<List<GeoPoint>> polylinePoints = new MutableLiveData<>(new ArrayList<>());
 
     private long lastStartTimestamp = 0L;
+    private Location lastLocation = null;
+    private boolean justResumed = false; // indica che abbiamo ripreso da pausa
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     private final Runnable timerRunnable = new Runnable() {
@@ -46,6 +49,7 @@ public class ActivityDataRecordedViewModel extends ViewModel {
     public LiveData<Long> getStartTimestamp() { return startTimestamp; }
     public LiveData<List<Location>> getLocations() { return locationsLiveData; }
     public LiveData<Double> getDistance() { return distanceLiveData; }
+    public LiveData<List<GeoPoint>> getPolylinePoints() { return polylinePoints; }
 
     private final MutableLiveData<List<Sport>> sportsLiveData = new MutableLiveData<>();
 
@@ -62,15 +66,21 @@ public class ActivityDataRecordedViewModel extends ViewModel {
         if (Boolean.TRUE.equals(isRecording.getValue())) return;
 
         long now = System.currentTimeMillis();
-
-        // set start only the first time
-        if (startTimestamp.getValue() == 0L) {
-            startTimestamp.setValue(now);
-        }
-
         lastStartTimestamp = now;
         handler.post(timerRunnable);
         isRecording.setValue(true);
+
+        if (startTimestamp.getValue() == 0L) {
+            // primo avvio -> reset completo
+            startTimestamp.setValue(now);
+            distanceLiveData.setValue(0.0);
+            locationsLiveData.setValue(new ArrayList<>());
+            polylinePoints.setValue(new ArrayList<>());
+            lastLocation = null;
+        } else {
+            // ripresa da pausa -> linea di continuità
+            justResumed = true;
+        }
     }
 
     public void stopRecording() {
@@ -78,9 +88,7 @@ public class ActivityDataRecordedViewModel extends ViewModel {
 
         handler.removeCallbacks(timerRunnable);
         long current = System.currentTimeMillis();
-        long updated = elapsedTime.getValue() + (current - lastStartTimestamp);
-        elapsedTime.setValue(updated);
-
+        elapsedTime.setValue(elapsedTime.getValue() + (current - lastStartTimestamp));
         isRecording.setValue(false);
     }
 
@@ -115,18 +123,32 @@ public class ActivityDataRecordedViewModel extends ViewModel {
     }
 
     public void addLocationPoint(Location newLocation) {
-        List<Location> currentList = locationsLiveData.getValue();
-        if (currentList == null) currentList = new ArrayList<>();
+        if (!Boolean.TRUE.equals(isRecording.getValue())) return;
 
-        // Se esiste già un punto precedente → calcola distanza incrementale
-        if (!currentList.isEmpty()) {
-            Location last = currentList.get(currentList.size() - 1);
-            float delta = last.distanceTo(newLocation); // metri
-            distanceLiveData.setValue(distanceLiveData.getValue() + delta / 1000.0); // converti in km
+        List<Location> locs = locationsLiveData.getValue();
+        if (locs == null) locs = new ArrayList<>();
+
+        List<GeoPoint> poly = polylinePoints.getValue();
+        if (poly == null) poly = new ArrayList<>();
+
+        if (!locs.isEmpty() && lastLocation != null) {
+            if (!justResumed) {
+                // distanza normale
+                float delta = lastLocation.distanceTo(newLocation);
+                distanceLiveData.setValue(distanceLiveData.getValue() + delta);
+            } else {
+                // punto di continuità -> linea retta senza calcolare distanza
+                justResumed = false;
+            }
         }
 
-        currentList.add(newLocation);
-        locationsLiveData.setValue(currentList);
+        locs.add(newLocation);
+        locationsLiveData.setValue(locs);
+
+        poly.add(new GeoPoint(newLocation.getLatitude(), newLocation.getLongitude()));
+        polylinePoints.setValue(poly);
+
+        lastLocation = newLocation;
     }
 
     /*
