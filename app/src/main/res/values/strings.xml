@@ -99,5 +99,6 @@
     <string name="description">Description</string>
     <string name="add_peak">Add peak</string>
     <string name="select_sport">Select sport</string>
+    <string name="recording">Recording...</string>
 
 </resources>
