@@ -1,4 +1,4 @@
-package com.example.peaky.ui.home;
+package com.example.peaky.ui.home.challenges;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;

@@ -69,7 +69,6 @@ public class SaveActivityFragment extends Fragment {
         ActivityLocalDataSource activityLocalDataSource = new ActivityLocalDataSource();
         ActivityFirestoreDataSource activityFirestoreDataSource = new ActivityFirestoreDataSource(FirebaseFirestore.getInstance());
         activityRepository = new ActivityRepository(requireContext(), activityFirestoreDataSource, activityLocalDataSource);
-        // ActivityDataRecordedViewModelFactory factory = new ActivityDataRecordedViewModelFactory(activityRepository, sportRepository);
         activityDataRecordedViewModel = new ViewModelProvider(requireActivity()/*, factory*/).get(ActivityDataRecordedViewModel.class);
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();

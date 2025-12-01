@@ -8,13 +8,13 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.peaky.ui.home.HomeFragment"
+        android:name="com.example.peaky.ui.home.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.example.peaky.ui.home.MapsFragment"
+        android:name="com.example.peaky.ui.home.maps.MapsFragment"
         android:label="Maps"
         tools:layout="@layout/fragment_maps" >
     </fragment>
@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/achievementsFragment"
-        android:name="com.example.peaky.ui.home.ChallengesFragment"
+        android:name="com.example.peaky.ui.home.challenges.ChallengesFragment"
         android:label="Achievements"
         tools:layout="@layout/fragment_challenges" />
 

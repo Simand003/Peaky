@@ -45,6 +45,7 @@ import com.example.peaky.source.SportDataSource;
 import com.example.peaky.source.activity.ActivityFirestoreDataSource;
 import com.example.peaky.source.activity.ActivityLocalDataSource;
 import com.example.peaky.source.osm.OSMDataSource;
+import com.example.peaky.ui.home.HomeActivity;
 import com.example.peaky.ui.home.record_activity.ActivityDataRecordedViewModel;
 import com.example.peaky.ui.home.record_activity.ActivityDataRecordedViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -313,7 +314,10 @@ public class RecordFragment extends Fragment {
                 initializeMap();
                 startLocationUpdates();
             } else {
-                showPermanentDenialDialog();
+                if (bottomNavigationView != null) {
+                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+                }
             }
         }
 
@@ -328,9 +332,13 @@ public class RecordFragment extends Fragment {
                 if (!rec) {
                     closeFragment();
                 } else {
-                    requireActivity().onBackPressed();
+                    if (bottomNavigationView != null) {
+                        bottomNavigationView.setVisibility(View.VISIBLE);
+                        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+                        LinearLayout popup = getView().findViewById(R.id.recording_popup_container);
+                        popup.setVisibility(View.VISIBLE);
+                    }
                 }
-
             }
         });
     }
@@ -580,12 +588,12 @@ public class RecordFragment extends Fragment {
             if (!rec) {
                 closeFragment();
             } else {
-                requireActivity().onBackPressed();
+                if (bottomNavigationView != null) {
+                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+                }
             }
-            if (bottomNavigationView != null) {
-                bottomNavigationView.setVisibility(View.VISIBLE);
-                bottomNavigationView.setSelectedItemId(R.id.navigation_home);
-            }
+
         });
     }
 

@@ -1,4 +1,4 @@
-package com.example.peaky.ui.home;
+package com.example.peaky.ui.home.maps;
 
 import android.os.Bundle;
 
@@ -12,14 +12,14 @@ import com.example.peaky.R;
 
 import androidx.annotation.NonNull;
 
-public class HomeFragment extends Fragment {
+public class MapsFragment extends Fragment {
 
-    public HomeFragment() {}
+    public MapsFragment(){}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
         return view;
     }
