@@ -1,15 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
+    <org.osmdroid.views.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <ImageButton
+        android:id="@+id/cancel_adding_operation"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_cross"
+        app:tint="@color/md_theme_primary"
+        android:background="@drawable/shape_round_button_empty"
+        android:contentDescription="@string/delete_adding_operation"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:id="@+id/buttons_container_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Maps Fragment"
-        android:textSize="24sp" />
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="end"
+        android:layout_gravity="bottom|end"
+        >
 
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/button_go_to_position"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/record_position_empty"
+            app:tint="@color/md_theme_primary"
+            android:background="@drawable/shape_round_button_empty"
+            android:contentDescription="@string/go_to_users_position"
+            android:scaleType="centerInside"
+            />
+
+        <ImageButton
+            android:id="@+id/button_add_peak"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_add"
+            app:tint="@color/md_theme_surfaceContainerLow"
+            android:background="@drawable/shape_round_button_full"
+            android:contentDescription="@string/end_recording"
+            android:scaleType="centerInside"
+            android:layout_marginTop="8dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_add_peaks"
+        style="@style/Widget.Material3.BottomSheet.Modal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        app:behavior_draggable="true"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:visibility="visible"
+        >
+
+        <ImageView
+            android:id="@+id/arrowIcon2"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/bs_ic_line" />
+
+        <TextView
+            android:id="@+id/bottom_sheet_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_a_peak"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_add_peaks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"/>
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

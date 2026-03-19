@@ -4,12 +4,14 @@ import com.example.peaky.source.osm.OSMDataSource;
 
 public class OSMRepository {
 
-    private final OSMDataSource osmDataSource;
+    private OSMDataSource dataSource;
 
-    public OSMRepository(OSMDataSource osmDataSource) {
-        this.osmDataSource = osmDataSource;
+    public OSMRepository(OSMDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-
+    public void getNearbyPeaks(double lat, double lon, OSMDataSource.Callback callback) {
+        dataSource.getPeaks(lat, lon, callback);
+    }
 }
 

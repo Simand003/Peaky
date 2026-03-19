@@ -26,6 +26,9 @@ public class ActivityDataRecordedViewModel extends ViewModel {
     private final MutableLiveData<List<Location>> locationsLiveData = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Double> distanceLiveData = new MutableLiveData<>(0.0);
     private final MutableLiveData<List<GeoPoint>> polylinePoints = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<Double> elevationGainLiveData = new MutableLiveData<>(0.0);
+    private final MutableLiveData<Double> elevationLossLiveData = new MutableLiveData<>(0.0);
+
 
     private long lastStartTimestamp = 0L;
     private Location lastLocation = null;
@@ -50,6 +53,9 @@ public class ActivityDataRecordedViewModel extends ViewModel {
     public LiveData<List<Location>> getLocations() { return locationsLiveData; }
     public LiveData<Double> getDistance() { return distanceLiveData; }
     public LiveData<List<GeoPoint>> getPolylinePoints() { return polylinePoints; }
+    public LiveData<Double> getElevationGain() { return elevationGainLiveData; }
+    public LiveData<Double> getElevationLoss() { return elevationLossLiveData; }
+
 
     private final MutableLiveData<List<Sport>> sportsLiveData = new MutableLiveData<>();
 
@@ -116,8 +122,8 @@ public class ActivityDataRecordedViewModel extends ViewModel {
         activity.setDistance(distanceLiveData.getValue());
         activity.setPoints(locationsLiveData.getValue());
         activity.setStartTime(startTimestamp.getValue());
-        // ELEVATION GAIN
-        // ELEVATION LOSS
+        activity.setElevationGain(elevationGainLiveData.getValue());
+        activity.setElevationLoss(elevationLossLiveData.getValue());
         activity.setDescription(description);
         activityRepository.addActivity(userId, activity);
     }
@@ -136,6 +142,13 @@ public class ActivityDataRecordedViewModel extends ViewModel {
                 // distanza normale
                 float delta = lastLocation.distanceTo(newLocation);
                 distanceLiveData.setValue(distanceLiveData.getValue() + delta);
+
+                double deltaElevation = newLocation.getAltitude() - lastLocation.getAltitude();
+                if (deltaElevation > 0) {
+                    elevationGainLiveData.setValue(elevationGainLiveData.getValue() + deltaElevation);
+                } else if (deltaElevation < 0) {
+                    elevationLossLiveData.setValue(elevationLossLiveData.getValue() - deltaElevation);
+                }
             } else {
                 // punto di continuità -> linea retta senza calcolare distanza
                 justResumed = false;

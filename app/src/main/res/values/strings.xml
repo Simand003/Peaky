@@ -100,5 +100,8 @@
     <string name="add_peak">Add peak</string>
     <string name="select_sport">Select sport</string>
     <string name="recording">Recording...</string>
+    <string name="add_a_peak_to_the_database">Add a peak to the world database</string>
+    <string name="delete_adding_operation">Delete adding operation</string>
+    <string name="select_a_peak">Select a peak</string>
 
 </resources>

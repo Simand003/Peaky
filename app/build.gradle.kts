@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+
 }
 
 android {
     namespace = "com.example.peaky"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.peaky"
@@ -58,4 +59,5 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.gson)
     implementation(libs.osmdroid)
+    implementation(libs.okhttp3)
 }

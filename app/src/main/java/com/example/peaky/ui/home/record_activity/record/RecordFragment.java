@@ -77,7 +77,8 @@ public class RecordFragment extends Fragment {
     private BottomNavigationView bottomNavigationView;
 
     private LinearLayout linearLayoutGPSLocator, buttonsContainer;
-    private TextView textGPSLocator, textAltitude, textViewTimer, textViewDistance;
+    private TextView textGPSLocator, textAltitude, textViewTimer, textViewDistance,
+            textViewElevationGain, textViewElevationLoss;
     private static final long SEARCH_TIMEOUT = 10000;
     private long lastLocationUpdate = 0;
     private FusedLocationProviderClient locationClient;
@@ -146,6 +147,8 @@ public class RecordFragment extends Fragment {
         //textAltitude = view.findViewById(R.id.textAltitude);
         textViewTimer = view.findViewById(R.id.textView_chronometer);
         textViewDistance = view.findViewById(R.id.textView_distance);
+        textViewElevationGain = view.findViewById(R.id.textView_elevation_gain);
+        textViewElevationLoss = view.findViewById(R.id.textView_elevation_loss);
 
         //Initializing the buttons
         buttonsContainer = view.findViewById(R.id.buttons_container);
@@ -546,6 +549,12 @@ public class RecordFragment extends Fragment {
         });
         activityDataRecordedViewModel.getDistance().observe(getViewLifecycleOwner(), distance -> {
             textViewDistance.setText(formatDistance(distance));
+        });
+        activityDataRecordedViewModel.getElevationGain().observe(getViewLifecycleOwner(), gain -> {
+            textViewElevationGain.setText(String.format("%+d m", Math.round(gain)));
+        });
+        activityDataRecordedViewModel.getElevationLoss().observe(getViewLifecycleOwner(), loss -> {
+            textViewElevationLoss.setText(String.format("%+d m", -Math.round(loss)));
         });
 
         activityDataRecordedViewModel.getPolylinePoints().observe(getViewLifecycleOwner(), points -> {
