@@ -57,8 +57,7 @@ public class MapsFragment extends Fragment {
     private RecyclerView recyclerPeaks;
 
     private boolean isAddModeActive = false;
-
-    private List<Peak> allPeaks = new ArrayList<>();
+    private boolean isLoading = false;
 
     public MapsFragment(){}
 
@@ -86,7 +85,6 @@ public class MapsFragment extends Fragment {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         initializeMap();
-        setupMapLongPress();
 
         return view;
     }
@@ -96,24 +94,14 @@ public class MapsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         addPeakButton.setOnClickListener(v -> {
-            if (!isAddModeActive) {
-                new MaterialAlertDialogBuilder(requireContext())
-                        .setTitle("Do you want to add a peak to the database?")
-                        .setMessage("To add a peak to the database, press and hold on the peak.")
-                        .setPositiveButton("OK", (dialog, which) -> {
-                            isAddModeActive = true;
-                            addPeakButton.setImageResource(R.drawable.ic_cross);
-                        })
-                        .setNegativeButton(Constants.CANCEL, null)
-                        .show();
-            } else {
-                isAddModeActive = false;
-                addPeakButton.setImageResource(R.drawable.ic_add);
+            if (isLoading) return;
+            if (mapView.getZoomLevelDouble() < 15) {
+                Toast.makeText(getContext(), "Zoom in to load peaks", Toast.LENGTH_SHORT).show();
+                return;
             }
+            loadVisiblePeaks();
         });
     }
-
-    // --------------- MAP -----------------
 
     private void initializeMap() {
         mapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK);
@@ -129,31 +117,21 @@ public class MapsFragment extends Fragment {
         mapView.getOverlays().add(userMarker);
     }
 
-    private void setupMapLongPress() {
+    private void loadVisiblePeaks() {
 
-        MapEventsReceiver receiver = new MapEventsReceiver() {
-            @Override
-            public boolean singleTapConfirmedHelper(GeoPoint p) {
-                return false;
-            }
+        isLoading = true;
 
-            @Override
-            public boolean longPressHelper(GeoPoint p) {
-                if (!isAddModeActive) return false;
+        Toast.makeText(getContext(), "Loading peaks...", Toast.LENGTH_SHORT).show();
 
-                handleLongPress(p);
-                return true;
-            }
-        };
+        org.osmdroid.util.BoundingBox box = mapView.getBoundingBox();
 
-        mapView.getOverlays().add(new MapEventsOverlay(receiver));
-    }
+        double north = box.getLatNorth();
+        double south = box.getLatSouth();
+        double east = box.getLonEast();
+        double west = box.getLonWest();
 
-    private void handleLongPress(GeoPoint point) {
-
-        osmRepository.getNearbyPeaks(
-                point.getLatitude(),
-                point.getLongitude(),
+        osmRepository.getPeaksInArea(
+                north, south, east, west,
                 new OSMDataSource.Callback() {
 
                     @Override
@@ -161,28 +139,29 @@ public class MapsFragment extends Fragment {
 
                         requireActivity().runOnUiThread(() -> {
 
+                            isLoading = false;
+
                             if (peaks.isEmpty()) {
                                 Toast.makeText(getContext(),
-                                        "No peaks found",
+                                        "No peaks in this area",
                                         Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
-                            if (peaks.size() == 1) {
-                                onPeakSelected(peaks.get(0));
-                            } else {
-                                showPeaksBottomSheet(peaks);
-                            }
+                            showPeaksBottomSheet(peaks);
                         });
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        requireActivity().runOnUiThread(() ->
-                                Toast.makeText(getContext(),
-                                        "Error fetching peaks",
-                                        Toast.LENGTH_SHORT).show()
-                        );
+
+                        requireActivity().runOnUiThread(() -> {
+                            isLoading = false;
+
+                            Toast.makeText(getContext(),
+                                    "Error loading peaks",
+                                    Toast.LENGTH_SHORT).show();
+                        });
                     }
                 }
         );

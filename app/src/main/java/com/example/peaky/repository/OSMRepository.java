@@ -10,8 +10,9 @@ public class OSMRepository {
         this.dataSource = dataSource;
     }
 
-    public void getNearbyPeaks(double lat, double lon, OSMDataSource.Callback callback) {
-        dataSource.getPeaks(lat, lon, callback);
+    public void getPeaksInArea(double north, double south, double east, double west,
+                               OSMDataSource.Callback callback) {
+        dataSource.getPeaksInArea(north, south, east, west, callback);
     }
 }
 

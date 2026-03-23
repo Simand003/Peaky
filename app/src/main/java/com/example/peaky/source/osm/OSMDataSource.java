@@ -28,9 +28,10 @@ public class OSMDataSource {
         void onError(Exception e);
     }
 
-    public void getPeaks(double lat, double lon, Callback callback) {
+    public void getPeaksInArea(double north, double south, double east, double west, Callback callback) {
 
-        String query = "[out:json];node(around:250," + lat + "," + lon + ")[\"natural\"=\"peak\"];out;";
+        String query = "[out:json];node[\"natural\"=\"peak\"]("
+                + south + "," + west + "," + north + "," + east + ");out;";
 
         RequestBody body = RequestBody.create(
                 query,
@@ -88,8 +89,15 @@ public class OSMDataSource {
 
                 int elevation = 0;
                 try {
-                    elevation = Integer.parseInt(eleStr.replaceAll("[^0-9]", ""));
+                    eleStr = eleStr.toLowerCase().replace("m", "").trim();
+                    eleStr = eleStr.replace(",", ".");
+                    double eleDouble = Double.parseDouble(eleStr);
+                    elevation = (int) eleDouble;
                 } catch (Exception ignored) {}
+
+                if (name.equalsIgnoreCase("Unknown peak") || elevation == 0) {
+                    continue;
+                }
 
                 peaks.add(new Peak(
                         name,
@@ -98,7 +106,6 @@ public class OSMDataSource {
                         elevation
                 ));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
